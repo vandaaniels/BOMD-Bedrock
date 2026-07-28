@@ -1,2 +1,19 @@
-# BOMD-Bedrock
-Unofficial Bedrock Edition port of Bosses of Mass Destruction.
+# Bosses of Mass Destruction: Bedrock Edition
+
+> Public Beta — This project is under active development.
+
+## About
+
+## Current content
+
+## Requirements
+
+## Installation
+
+## Known limitations
+
+## Bug reports
+
+## Credits
+
+## License

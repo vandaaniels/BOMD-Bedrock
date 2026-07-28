@@ -1,2 +1,24 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Use LF consistently for text files
+* text=auto eol=lf
+
+# Source and configuration files
+*.md text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.lang text eol=lf
+*.mcfunction text eol=lf
+*.properties text eol=lf
+*.txt text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tga binary
+*.ogg binary
+*.wav binary
+*.mcstructure binary
+*.zip binary
+*.mcpack binary
+*.mcaddon binary
