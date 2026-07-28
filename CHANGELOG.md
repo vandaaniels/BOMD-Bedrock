@@ -419,4 +419,4 @@ Replaced the previous shared movement controller with an explicit combat state m
 
 ## Earlier development builds
 
-Versions before `1.2.5` were internal or early development builds and are not fully documented in this consolidated changelog.
+Versions before `1.2.5` were internal or early development builds and are not fully documented in this consolidated changelog
