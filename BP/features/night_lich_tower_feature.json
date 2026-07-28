@@ -1,0 +1,20 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:structure_template_feature": {
+    "description": {
+      "identifier": "bomd:night_lich_tower_feature"
+    },
+    "structure_name": "bomd:night_lich_tower",
+    "adjustment_radius": 12,
+    "facing_direction": "random",
+    "ground_level": 23,
+    "rotate_around_center": true,
+    "constraints": {
+      "grounded": {},
+      "leveled": {
+        "max_steepness": 4
+      },
+      "unburied": {}
+    }
+  }
+}

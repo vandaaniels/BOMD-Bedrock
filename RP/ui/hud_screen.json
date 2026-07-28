@@ -1,0 +1,375 @@
+{
+  "namespace": "hud",
+  "bomd_lich_boss_node": {
+    "type": "image",
+    "size": [
+      7,
+      7
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "texture": "textures/ui/bomd/lich_boss_bar_dividers",
+    "uv_size": [
+      7,
+      7
+    ],
+    "bilinear": false,
+    "layer": 4
+  },
+  "bomd_lich_boss_node_active@hud.bomd_lich_boss_node": {
+    "uv": [
+      45,
+      0
+    ],
+    "visible": false,
+    "layer": 5,
+    "$node_visible_binding|default": "(#progress_percentage > 0.25 or #progress_percentage = 0.25)",
+    "bindings": [
+      {
+        "binding_name": "$node_visible_binding",
+        "binding_name_override": "#visible",
+        "binding_type": "collection",
+        "binding_collection_name": "boss_bars"
+      }
+    ]
+  },
+  "bomd_lich_boss_node_inactive@hud.bomd_lich_boss_node": {
+    "uv": [
+      45,
+      7
+    ]
+  },
+  "bomd_lich_boss_bar": {
+    "type": "panel",
+    "size": [
+      182,
+      5
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      10
+    ],
+    "layer": 3,
+    "bindings": [
+      {
+        "binding_name": "(#bossName = 'Night Lich')",
+        "binding_name_override": "#visible",
+        "binding_type": "collection",
+        "binding_collection_name": "boss_bars"
+      }
+    ],
+    "controls": [
+      {
+        "blue_progress": {
+          "type": "image",
+          "size": [
+            182,
+            5
+          ],
+          "texture": "textures/ui/filled_progress_bar",
+          "color": [
+            0.3333,
+            0.3333,
+            1.0
+          ],
+          "clip_direction": "left",
+          "clip_pixelperfect": false,
+          "layer": 3,
+          "bindings": [
+            {
+              "binding_name": "#progress_percentage",
+              "binding_name_override": "#clip_ratio",
+              "binding_type": "collection",
+              "binding_collection_name": "boss_bars"
+            }
+          ]
+        }
+      },
+      {
+        "phase_25_inactive@hud.bomd_lich_boss_node_inactive": {
+          "offset": [
+            42,
+            -1
+          ]
+        }
+      },
+      {
+        "phase_25_active@hud.bomd_lich_boss_node_active": {
+          "offset": [
+            42,
+            -1
+          ],
+          "$node_visible_binding": "(#progress_percentage > 0.25 or #progress_percentage = 0.25)"
+        }
+      },
+      {
+        "phase_50_inactive@hud.bomd_lich_boss_node_inactive": {
+          "offset": [
+            88,
+            -1
+          ]
+        }
+      },
+      {
+        "phase_50_active@hud.bomd_lich_boss_node_active": {
+          "offset": [
+            88,
+            -1
+          ],
+          "$node_visible_binding": "(#progress_percentage > 0.5 or #progress_percentage = 0.5)"
+        }
+      },
+      {
+        "phase_75_inactive@hud.bomd_lich_boss_node_inactive": {
+          "offset": [
+            134,
+            -1
+          ]
+        }
+      },
+      {
+        "phase_75_active@hud.bomd_lich_boss_node_active": {
+          "offset": [
+            134,
+            -1
+          ],
+          "$node_visible_binding": "(#progress_percentage > 0.75 or #progress_percentage = 0.75)"
+        }
+      }
+    ]
+  },
+  "boss_health_panel": {
+    "modifications": [
+      {
+        "array_name": "controls",
+        "operation": "insert_back",
+        "value": [
+          {
+            "bomd_lich_boss_bar@hud.bomd_lich_boss_bar": {}
+          },
+          {
+            "bomd_gauntlet_boss_bar@hud.bomd_gauntlet_boss_bar": {}
+          }
+        ]
+      }
+    ]
+  },
+  "bomd_gauntlet_boss_bar": {
+    "type": "panel",
+    "size": [
+      220,
+      18
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      5
+    ],
+    "layer": 8,
+    "bindings": [
+      {
+        "binding_name": "(#bossName = 'Nether Gauntlet')",
+        "binding_name_override": "#visible",
+        "binding_type": "collection",
+        "binding_collection_name": "boss_bars"
+      }
+    ],
+    "controls": [
+      {
+        "bar_background": {
+          "type": "image",
+          "size": [
+            196,
+            11
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            0,
+            2
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            0,
+            0
+          ],
+          "uv_size": [
+            196,
+            11
+          ],
+          "bilinear": false,
+          "layer": 8
+        }
+      },
+      {
+        "bar_fill": {
+          "type": "image",
+          "size": [
+            190,
+            7
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            -1,
+            2
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            0,
+            12
+          ],
+          "uv_size": [
+            190,
+            7
+          ],
+          "clip_direction": "left",
+          "clip_pixelperfect": false,
+          "bilinear": false,
+          "layer": 9,
+          "bindings": [
+            {
+              "binding_name": "#progress_percentage",
+              "binding_name_override": "#clip_ratio",
+              "binding_type": "collection",
+              "binding_collection_name": "boss_bars"
+            }
+          ]
+        }
+      },
+      {
+        "bar_frame": {
+          "type": "image",
+          "size": [
+            196,
+            11
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            0,
+            2
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            0,
+            20
+          ],
+          "uv_size": [
+            196,
+            11
+          ],
+          "bilinear": false,
+          "layer": 10
+        }
+      },
+      {
+        "eye_icon": {
+          "type": "image",
+          "size": [
+            24,
+            24
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            -111,
+            2
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            202,
+            0
+          ],
+          "uv_size": [
+            26,
+            26
+          ],
+          "bilinear": false,
+          "layer": 11
+        }
+      },
+      {
+        "laser_threshold": {
+          "type": "image",
+          "size": [
+            7,
+            6
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            66,
+            -5
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            0,
+            34
+          ],
+          "uv_size": [
+            7,
+            6
+          ],
+          "bilinear": false,
+          "layer": 12
+        }
+      },
+      {
+        "spin_threshold": {
+          "type": "image",
+          "size": [
+            7,
+            6
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            38,
+            -5
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            7,
+            34
+          ],
+          "uv_size": [
+            7,
+            6
+          ],
+          "bilinear": false,
+          "layer": 12
+        }
+      },
+      {
+        "blindness_threshold": {
+          "type": "image",
+          "size": [
+            7,
+            6
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            0,
+            -5
+          ],
+          "texture": "textures/ui/bomd/gauntlet_boss_bar",
+          "uv": [
+            14,
+            34
+          ],
+          "uv_size": [
+            7,
+            6
+          ],
+          "bilinear": false,
+          "layer": 12
+        }
+      }
+    ]
+  }
+}

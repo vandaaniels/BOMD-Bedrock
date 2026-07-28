@@ -1,0 +1,27 @@
+{
+  "format_version": "1.10.0",
+  "animations": {
+    "animation.bomd_night_lich.soul_star_wisp": {
+      "loop": true,
+      "bones": {
+        "star": {
+          "rotation": [
+            "query.camera_rotation(0)",
+            "query.camera_rotation(1) - query.body_y_rotation",
+            "math.sin(query.life_time * 210.0) * 8.0"
+          ],
+          "position": [
+            0,
+            "math.sin(query.life_time * 180.0) * 1.5",
+            0
+          ],
+          "scale": [
+            "1.0 + math.sin(query.life_time * 260.0) * 0.08",
+            "1.0 + math.sin(query.life_time * 260.0) * 0.08",
+            1
+          ]
+        }
+      }
+    }
+  }
+}

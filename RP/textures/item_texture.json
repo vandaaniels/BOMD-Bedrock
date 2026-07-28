@@ -1,0 +1,21 @@
+{
+  "resource_pack_name": "bomd_night_lich",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "bomd:soul_star": {
+      "textures": [
+        "textures/bomd/night_lich/items/soul_star"
+      ]
+    },
+    "bomd:ancient_anima": {
+      "textures": [
+        "textures/bomd/night_lich/items/ancient_anima"
+      ]
+    },
+    "bomd:blazing_eye": {
+      "textures": [
+        "textures/bomd/nether_gauntlet/items/blazing_eye"
+      ]
+    }
+  }
+}

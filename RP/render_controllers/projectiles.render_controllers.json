@@ -1,0 +1,65 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_night_lich.magic_missile": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": ["Texture.default"],
+      "uv_anim": {
+        "offset": [0, 0],
+        "scale": [1, 1]
+      },
+      "filter_lighting": true,
+      "is_hurt_color": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    "controller.render.bomd_night_lich.comet": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": ["Texture.default"],
+      "uv_anim": {
+        "offset": [0, 0],
+        "scale": [1, 1]
+      },
+      "filter_lighting": true,
+      "is_hurt_color": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    "controller.render.bomd_night_lich.soul_star_wisp": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": ["Texture.default"],
+      "uv_anim": {
+        "offset": [0, 0],
+        "scale": [1, 1]
+      },
+      "filter_lighting": true,
+      "is_hurt_color": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    }
+  }
+}

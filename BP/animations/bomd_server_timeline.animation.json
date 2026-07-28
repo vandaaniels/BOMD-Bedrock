@@ -1,0 +1,624 @@
+{
+  "format_version": "1.10.0",
+  "animations": {
+    "animation.bomd.gauntlet.server.punch": {
+      "loop": false,
+      "animation_length": 4.05,
+      "timeline": {
+        "0": [
+          "@s bomd:open_hand",
+          "@s bomd:gauntlet_punch_begin",
+          "/scriptevent bomd:gauntlet_timeline punch:begin"
+        ],
+        "0.35": [
+          "@s bomd:close_fist"
+        ],
+        "0.5": [
+          "@s bomd:gauntlet_punch_loop"
+        ],
+        "0.6": [
+          "/scriptevent bomd:gauntlet_timeline punch:clink"
+        ],
+        "0.8": [
+          "/scriptevent bomd:gauntlet_timeline punch:impulse_1"
+        ],
+        "1.55": [
+          "/scriptevent bomd:gauntlet_timeline punch:impulse_2"
+        ],
+        "2.3": [
+          "/scriptevent bomd:gauntlet_timeline punch:impulse_3"
+        ],
+        "2.8": [
+          "@s bomd:gauntlet_punch_stop",
+          "/scriptevent bomd:gauntlet_timeline punch:open"
+        ],
+        "3.2": [
+          "@s bomd:open_hand"
+        ],
+        "3.4": [
+          "@s bomd:gauntlet_idle_visual"
+        ],
+        "4": [
+          "/scriptevent bomd:gauntlet_timeline punch:complete"
+        ]
+      }
+    },
+    "animation.bomd.gauntlet.server.swirl": {
+      "loop": false,
+      "animation_length": 4.05,
+      "timeline": {
+        "0": [
+          "@s bomd:open_hand",
+          "@s bomd:gauntlet_swirl_begin",
+          "/scriptevent bomd:gauntlet_timeline swirl_punch:begin"
+        ],
+        "0.35": [
+          "@s bomd:close_fist"
+        ],
+        "1.5": [
+          "/scriptevent bomd:gauntlet_timeline swirl_punch:impulse_1"
+        ],
+        "2.25": [
+          "/scriptevent bomd:gauntlet_timeline swirl_punch:impulse_2"
+        ],
+        "3": [
+          "@s bomd:open_hand",
+          "@s bomd:gauntlet_swirl_open",
+          "/scriptevent bomd:gauntlet_timeline swirl_punch:open"
+        ],
+        "3.3": [
+          "@s bomd:gauntlet_idle_visual"
+        ],
+        "4": [
+          "/scriptevent bomd:gauntlet_timeline swirl_punch:complete"
+        ]
+      }
+    },
+    "animation.bomd.gauntlet.server.laser": {
+      "loop": false,
+      "animation_length": 6.05,
+      "timeline": {
+        "0": [
+          "@s bomd:gauntlet_laser_begin",
+          "/scriptevent bomd:gauntlet_timeline laser:begin"
+        ],
+        "1.25": [
+          "@s bomd:gauntlet_laser_active",
+          "/scriptevent bomd:gauntlet_timeline laser:active"
+        ],
+        "4.25": [
+          "@s bomd:gauntlet_laser_stop",
+          "/scriptevent bomd:gauntlet_timeline laser:recovery"
+        ],
+        "4.9": [
+          "@s bomd:gauntlet_idle_visual"
+        ],
+        "6": [
+          "/scriptevent bomd:gauntlet_timeline laser:complete"
+        ]
+      }
+    },
+    "animation.bomd.gauntlet.server.blindness": {
+      "loop": false,
+      "animation_length": 4.05,
+      "timeline": {
+        "0": [
+          "@s bomd:open_hand",
+          "@s bomd:gauntlet_cast_begin",
+          "/scriptevent bomd:gauntlet_timeline blindness:begin"
+        ],
+        "0.5": [
+          "@s bomd:close_fist"
+        ],
+        "1.5": [
+          "@s bomd:gauntlet_cast_release",
+          "/scriptevent bomd:gauntlet_timeline blindness:burst"
+        ],
+        "2.15": [
+          "@s bomd:open_hand",
+          "@s bomd:gauntlet_idle_animation"
+        ],
+        "2.5": [
+          "@s bomd:gauntlet_normal_visual",
+          "/scriptevent bomd:gauntlet_timeline blindness:apply"
+        ],
+        "4": [
+          "/scriptevent bomd:gauntlet_timeline blindness:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.comet": {
+      "loop": false,
+      "animation_length": 4.05,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_comet_visual",
+          "/scriptevent bomd:lich_timeline comet:begin"
+        ],
+        "0.5": [
+          "/scriptevent bomd:lich_timeline comet:prepare"
+        ],
+        "0.75": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "0.9": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.05": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.2": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.35": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.5": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.65": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.8": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "1.95": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.1": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.25": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.4": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.55": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.7": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "2.85": [
+          "/scriptevent bomd:lich_timeline comet:telegraph"
+        ],
+        "3": [
+          "/scriptevent bomd:lich_timeline comet:launch"
+        ],
+        "3.8": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "4": [
+          "/scriptevent bomd:lich_timeline comet:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.missiles": {
+      "loop": false,
+      "animation_length": 4.05,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_missiles_visual",
+          "/scriptevent bomd:lich_timeline magic_missile_volley:begin"
+        ],
+        "0.5": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:prepare"
+        ],
+        "0.8": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "1": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "1.2": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "1.4": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "1.6": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "1.8": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "2": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "2.2": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:telegraph"
+        ],
+        "2.3": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:launch"
+        ],
+        "3.8": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "4": [
+          "/scriptevent bomd:lich_timeline magic_missile_volley:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.minions": {
+      "loop": false,
+      "animation_length": 4.1,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_minions_visual",
+          "/scriptevent bomd:lich_timeline summon_phantoms:begin"
+        ],
+        "2": [
+          "/scriptevent bomd:lich_timeline summon_phantoms:runes"
+        ],
+        "3.15": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "4": [
+          "/scriptevent bomd:lich_timeline summon_phantoms:summon"
+        ],
+        "4.05": [
+          "/scriptevent bomd:lich_timeline summon_phantoms:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.teleport": {
+      "loop": false,
+      "animation_length": 3.1,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_teleport_visual",
+          "/scriptevent bomd:lich_timeline teleport:begin"
+        ],
+        "0.5": [
+          "/scriptevent bomd:lich_timeline teleport:prepare"
+        ],
+        "0.75": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "0.8": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "0.85": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "0.9": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "0.95": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1.05": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1.1": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1.15": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1.2": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "1.45": [
+          "@s bomd:lich_teleporting_visual",
+          "/scriptevent bomd:lich_timeline teleport:vanish"
+        ],
+        "2": [
+          "/scriptevent bomd:lich_timeline teleport:move",
+          "@s bomd:lich_unteleport_visual"
+        ],
+        "2.05": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.1": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.15": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.2": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.25": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.3": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.35": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.4": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.45": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "2.5": [
+          "/scriptevent bomd:lich_timeline teleport:particle"
+        ],
+        "3.05": [
+          "@s bomd:lich_idle_visual",
+          "/scriptevent bomd:lich_timeline teleport:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.rage_comets": {
+      "loop": false,
+      "animation_length": 12.05,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_rage_visual",
+          "/scriptevent bomd:lich_timeline rage_comets:begin",
+          "/scriptevent bomd:lich_timeline rage_comets:prepare"
+        ],
+        "1": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "1.4": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "1.8": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "2.2": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "2.45": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "2.6": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "3": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_0",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "3.4": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "3.8": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "4.2": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_1",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "4.5": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_1"
+        ],
+        "4.6": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "5": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "5.4": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "5.8": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_2",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "6": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_2"
+        ],
+        "6.2": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "6.6": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "7": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "7.4": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_3",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "7.5": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_3"
+        ],
+        "7.8": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "8.2": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "8.6": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "9": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_4",
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "9.4": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "9.8": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "10.2": [
+          "/scriptevent bomd:lich_timeline rage_comets:telegraph_5"
+        ],
+        "10.5": [
+          "/scriptevent bomd:lich_timeline rage_comets:launch_5"
+        ],
+        "12": [
+          "/scriptevent bomd:lich_timeline rage_comets:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.rage_missiles": {
+      "loop": false,
+      "animation_length": 9.05,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_rage_visual",
+          "/scriptevent bomd:lich_timeline rage_missiles:begin",
+          "/scriptevent bomd:lich_timeline rage_missiles:prepare"
+        ],
+        "1.5": [
+          "/scriptevent bomd:lich_timeline rage_missiles:telegraph_horizontal"
+        ],
+        "2.45": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "3": [
+          "/scriptevent bomd:lich_timeline rage_missiles:launch_horizontal",
+          "/scriptevent bomd:lich_timeline rage_missiles:telegraph_vertical"
+        ],
+        "4.5": [
+          "/scriptevent bomd:lich_timeline rage_missiles:launch_vertical",
+          "/scriptevent bomd:lich_timeline rage_missiles:telegraph_cross"
+        ],
+        "6": [
+          "/scriptevent bomd:lich_timeline rage_missiles:launch_cross",
+          "/scriptevent bomd:lich_timeline rage_missiles:telegraph_x"
+        ],
+        "7.5": [
+          "/scriptevent bomd:lich_timeline rage_missiles:launch_x"
+        ],
+        "9": [
+          "/scriptevent bomd:lich_timeline rage_missiles:complete"
+        ]
+      }
+    },
+    "animation.bomd.lich.server.rage_minions": {
+      "loop": false,
+      "animation_length": 14.75,
+      "timeline": {
+        "0": [
+          "@s bomd:lich_rage_visual",
+          "/scriptevent bomd:lich_timeline rage_minions:begin",
+          "/scriptevent bomd:lich_timeline rage_minions:prepare"
+        ],
+        "2": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_0"
+        ],
+        "2.45": [
+          "@s bomd:lich_idle_visual"
+        ],
+        "3.85": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_1"
+        ],
+        "4": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_0"
+        ],
+        "5.55": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_2"
+        ],
+        "5.85": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_1"
+        ],
+        "7.1": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_3"
+        ],
+        "7.55": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_2"
+        ],
+        "8.5": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_4"
+        ],
+        "9.1": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_3"
+        ],
+        "9.75": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_5"
+        ],
+        "10.5": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_4"
+        ],
+        "10.85": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_6"
+        ],
+        "11.75": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_5"
+        ],
+        "11.8": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_7"
+        ],
+        "12.6": [
+          "/scriptevent bomd:lich_timeline rage_minions:rune_8"
+        ],
+        "12.85": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_6"
+        ],
+        "13.8": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_7"
+        ],
+        "14.6": [
+          "/scriptevent bomd:lich_timeline rage_minions:spawn_8"
+        ],
+        "14.7": [
+          "/scriptevent bomd:lich_timeline rage_minions:complete"
+        ]
+      }
+    }
+  }
+}

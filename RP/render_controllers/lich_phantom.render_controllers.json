@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_night_lich.lich_phantom": {
+      "geometry": "Geometry.default",
+      "materials": [
+        { "*": "Material.default" }
+      ],
+      "textures": ["Texture.default"],
+      "is_hurt_color": {
+        "r": 0.9,
+        "g": 0.25,
+        "b": 0.25,
+        "a": 0.6
+      }
+    }
+  }
+}

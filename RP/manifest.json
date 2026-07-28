@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "BOMD Bedrock 1.5.4 Public Beta - Resources",
+    "description": "Public Beta 1.5.4: fixes Soul Star remote-anchor queries, sanitizes localization files, and renames the native structure command to avoid the vanilla locate alias conflict.",
+    "uuid": "8ebcf828-88f5-480c-8606-d91b3aa7e5ef",
+    "version": [
+      1,
+      5,
+      4
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      30
+    ],
+    "pack_scope": "world"
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "0a2a08d1-5873-4212-b801-9f033d23d43c",
+      "version": [
+        1,
+        5,
+        4
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "8f972cea-05d6-413c-9587-7d4b3064b091",
+      "version": [
+        1,
+        5,
+        4
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "Rossetti",
+      "Barribob (original BOMD assets)"
+    ],
+    "license": "LicenseRef-BOMD-Bedrock AND LGPL-3.0-only",
+    "product_type": "addon"
+  }
+}

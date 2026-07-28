@@ -1,0 +1,33 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:structure_template_feature": {
+    "description": {
+      "identifier": "bomd:nether_gauntlet_arena_feature"
+    },
+    "structure_name": "bomd:nether_gauntlet_arena",
+    "adjustment_radius": 4,
+    "facing_direction": "random",
+    "ground_level": 0,
+    "rotate_around_center": true,
+    "constraints": {
+      "block_intersection": {
+        "block_allowlist": [
+          "minecraft:air",
+          "minecraft:netherrack",
+          "minecraft:blackstone",
+          "minecraft:basalt",
+          "minecraft:smooth_basalt",
+          "minecraft:gravel",
+          "minecraft:soul_sand",
+          "minecraft:soul_soil",
+          "minecraft:magma",
+          "minecraft:crimson_nylium",
+          "minecraft:warped_nylium",
+          "minecraft:nether_wart_block",
+          "minecraft:warped_wart_block"
+        ],
+        "only_check_intersection_for_motion_blocking_blocks": true
+      }
+    }
+  }
+}

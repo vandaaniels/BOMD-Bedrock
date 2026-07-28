@@ -1,0 +1,297 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:nether_gauntlet",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "properties": {
+        "bomd:animation_state": {
+          "type": "int",
+          "range": [
+            0,
+            9
+          ],
+          "default": 0,
+          "client_sync": true
+        },
+        "bomd:visual_state": {
+          "type": "int",
+          "range": [
+            0,
+            2
+          ],
+          "default": 0,
+          "client_sync": true
+        },
+        "bomd:eye_open": {
+          "type": "bool",
+          "default": true,
+          "client_sync": true
+        },
+        "bomd:server_attack": {
+          "type": "int",
+          "range": [
+            0,
+            4
+          ],
+          "default": 0,
+          "client_sync": false
+        }
+      },
+      "animations": {
+        "server_combat": "controller.animation.bomd.gauntlet.server",
+        "server_punch": "animation.bomd.gauntlet.server.punch",
+        "server_swirl": "animation.bomd.gauntlet.server.swirl",
+        "server_laser": "animation.bomd.gauntlet.server.laser",
+        "server_blindness": "animation.bomd.gauntlet.server.blindness"
+      },
+      "scripts": {
+        "animate": [
+          "server_combat"
+        ]
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "nether_gauntlet",
+          "monster",
+          "mob"
+        ]
+      },
+      "minecraft:health": {
+        "value": 250,
+        "max": 250
+      },
+      "minecraft:attack": {
+        "damage": 16
+      },
+      "minecraft:boss": {
+        "name": "Nether Gauntlet",
+        "hud_range": 64,
+        "should_darken_sky": false
+      },
+      "minecraft:collision_box": {
+        "width": 2.0,
+        "height": 4.0
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1.0
+      },
+      "minecraft:fire_immune": {},
+      "minecraft:persistent": {},
+      "minecraft:nameable": {},
+      "minecraft:pushable_by_entity": {
+        "presets": [
+          {
+            "push_mode": "none"
+          }
+        ]
+      }
+    },
+    "component_groups": {
+      "bomd:open_collision": {
+        "minecraft:collision_box": {
+          "width": 2.0,
+          "height": 4.0
+        }
+      },
+      "bomd:closed_collision": {
+        "minecraft:collision_box": {
+          "width": 2.0,
+          "height": 2.0
+        }
+      }
+    },
+    "events": {
+      "minecraft:entity_spawned": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:closed_collision"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:open_collision"
+              ]
+            }
+          },
+          {
+            "set_property": {
+              "bomd:server_attack": 0,
+              "bomd:animation_state": 0,
+              "bomd:visual_state": 0,
+              "bomd:eye_open": true
+            }
+          }
+        ]
+      },
+      "bomd:open_hand": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:closed_collision"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:open_collision"
+              ]
+            }
+          },
+          {
+            "set_property": {
+              "bomd:eye_open": true
+            }
+          }
+        ]
+      },
+      "bomd:close_fist": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:open_collision"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:closed_collision"
+              ]
+            }
+          },
+          {
+            "set_property": {
+              "bomd:eye_open": false
+            }
+          }
+        ]
+      },
+      "bomd:gauntlet_idle_visual": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:closed_collision"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:open_collision"
+              ]
+            }
+          },
+          {
+            "set_property": {
+              "bomd:animation_state": 0,
+              "bomd:visual_state": 0,
+              "bomd:eye_open": true
+            }
+          }
+        ]
+      },
+      "bomd:gauntlet_idle_animation": {
+        "set_property": {
+          "bomd:animation_state": 0
+        }
+      },
+      "bomd:gauntlet_normal_visual": {
+        "set_property": {
+          "bomd:visual_state": 0
+        }
+      },
+      "bomd:gauntlet_punch_begin": {
+        "set_property": {
+          "bomd:animation_state": 1,
+          "bomd:visual_state": 0
+        }
+      },
+      "bomd:gauntlet_punch_loop": {
+        "set_property": {
+          "bomd:animation_state": 2
+        }
+      },
+      "bomd:gauntlet_punch_stop": {
+        "set_property": {
+          "bomd:animation_state": 3
+        }
+      },
+      "bomd:gauntlet_swirl_begin": {
+        "set_property": {
+          "bomd:animation_state": 4,
+          "bomd:visual_state": 2
+        }
+      },
+      "bomd:gauntlet_swirl_open": {
+        "set_property": {
+          "bomd:visual_state": 0
+        }
+      },
+      "bomd:gauntlet_laser_begin": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:closed_collision"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:open_collision"
+              ]
+            }
+          },
+          {
+            "set_property": {
+              "bomd:animation_state": 5,
+              "bomd:visual_state": 1,
+              "bomd:eye_open": true
+            }
+          }
+        ]
+      },
+      "bomd:gauntlet_laser_active": {
+        "set_property": {
+          "bomd:animation_state": 6,
+          "bomd:visual_state": 2
+        }
+      },
+      "bomd:gauntlet_laser_stop": {
+        "set_property": {
+          "bomd:animation_state": 7,
+          "bomd:visual_state": 0
+        }
+      },
+      "bomd:gauntlet_cast_begin": {
+        "set_property": {
+          "bomd:animation_state": 8,
+          "bomd:visual_state": 1
+        }
+      },
+      "bomd:gauntlet_cast_release": {
+        "set_property": {
+          "bomd:visual_state": 2
+        }
+      }
+    }
+  }
+}

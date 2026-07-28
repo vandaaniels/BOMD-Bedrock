@@ -1,0 +1,18 @@
+BOMD BEDROCK PORT LICENSE
+
+Copyright (c) 2026 Rossetti. All rights reserved.
+
+This license applies only to original Bedrock port code, configuration, integration,
+documentation, and other original material identified in LICENSE-SCOPE.md. It does
+not replace or restrict the licenses of upstream Bosses of Mass Destruction material,
+Minecraft, Bedrock Edition, or third-party assets.
+
+Permission is granted to install and use unmodified public builds for personal
+gameplay. Redistribution, sale, sublicensing, removal of attribution, or claiming
+authorship of the original Bedrock port material requires prior written permission
+from the copyright holder, except where another applicable license expressly grants
+those rights for a separately identified file or component.
+
+THE ORIGINAL PORT MATERIAL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, AND NON-INFRINGEMENT.

@@ -1,0 +1,54 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:night_lich",
+      "materials": {
+        "default": "entity_alphatest",
+        "fullbright": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/bomd/night_lich/night_lich"
+      },
+      "geometry": {
+        "default": "geometry.bomd_night_lich"
+      },
+      "animations": {
+        "float": "animation.bomd_night_lich.float",
+        "skull_float": "animation.bomd_night_lich.skull_float",
+        "idle": "animation.bomd_night_lich.idle",
+        "book_idle": "animation.bomd_night_lich.book_idle",
+        "summon_fireball": "animation.bomd_night_lich.summon_fireball",
+        "summon_missiles": "animation.bomd_night_lich.summon_missiles",
+        "summon_minions": "animation.bomd_night_lich.summon_minions",
+        "teleport": "animation.bomd_night_lich.teleport",
+        "teleporting": "animation.bomd_night_lich.teleporting",
+        "unteleport": "animation.bomd_night_lich.unteleport",
+        "rage_mode": "animation.bomd_night_lich.rage_mode",
+        "code_pose": "animation.bomd_night_lich.code_pose",
+        "action_controller": "controller.animation.bomd_night_lich.action",
+        "skull_float_controller": "controller.animation.bomd_night_lich.skull_float",
+        "float_controller": "controller.animation.bomd_night_lich.float",
+        "book_idle_controller": "controller.animation.bomd_night_lich.book_idle",
+        "code_pose_controller": "controller.animation.bomd_night_lich.code_pose"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.bomd_body_pitch = 30.0 + math.clamp(math.atan2(query.vertical_speed, math.max(query.ground_speed, 0.001)) / 6.0, -15.0, 15.0);"
+        ],
+        "animate": [
+          "action_controller",
+          "skull_float_controller",
+          "float_controller",
+          "book_idle_controller",
+          "code_pose_controller"
+        ]
+      },
+      "render_controllers": ["controller.render.bomd_night_lich"],
+      "spawn_egg": {
+        "base_color": "#111827",
+        "overlay_color": "#67E8F9"
+      }
+    }
+  }
+}

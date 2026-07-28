@@ -1,0 +1,86 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:chiseled_stone_altar",
+      "menu_category": {
+        "category": "construction"
+      },
+      "states": {
+        "bomd:lit": [false, true]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:chiseled_stone_altar.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 6
+      },
+      "minecraft:friction": 0.6,
+      "minecraft:geometry": {
+        "identifier": "geometry.bomd_night_lich.chiseled_stone_altar"
+      },
+      "minecraft:item_visual": {
+        "geometry": "geometry.bomd_night_lich.chiseled_stone_altar",
+        "material_instances": {
+          "*": {
+            "texture": "bomd_altar_unlit",
+            "render_method": "opaque"
+          },
+          "side": {
+            "texture": "bomd_altar_dark",
+            "render_method": "opaque"
+          },
+          "end": {
+            "texture": "bomd_altar_unlit",
+            "render_method": "opaque"
+          }
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_altar_unlit",
+          "render_method": "opaque"
+        },
+        "side": {
+          "texture": "bomd_altar_dark",
+          "render_method": "opaque"
+        },
+        "end": {
+          "texture": "bomd_altar_unlit",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:light_dampening": 15,
+      "minecraft:tick": {
+        "looping": true,
+        "interval_range": [40, 80]
+      },
+      "bomd:lich_altar": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('bomd:lit')",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "bomd_altar_lit",
+              "render_method": "opaque"
+            },
+            "side": {
+              "texture": "bomd_altar_dark",
+              "render_method": "opaque"
+            },
+            "end": {
+              "texture": "bomd_altar_lit",
+              "render_method": "opaque"
+            }
+          },
+          "minecraft:light_emission": 12
+        }
+      }
+    ]
+  }
+}

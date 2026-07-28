@@ -1,0 +1,8 @@
+[
+  {
+    "flipbook_texture": "textures/bomd/night_lich/blocks/chiseled_stone_altar_lit",
+    "atlas_tile": "bomd_altar_lit",
+    "ticks_per_frame": 2,
+    "blend_frames": false
+  }
+]

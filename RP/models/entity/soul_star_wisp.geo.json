@@ -1,0 +1,33 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.bomd_night_lich.soul_star_wisp",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [0, 0, 0]
+      },
+      "bones": [
+        {
+          "name": "star",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-6, -6, 0],
+              "size": [12, 12, 0],
+              "uv": {
+                "south": {
+                  "uv": [0, 0],
+                  "uv_size": [16, 16]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

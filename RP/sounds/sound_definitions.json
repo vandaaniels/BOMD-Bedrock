@@ -1,0 +1,140 @@
+{
+  "format_version": "1.14.0",
+  "sound_definitions": {
+    "bomd.night_lich.comet_prepare": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/comet_prepare",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.comet_shoot": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/comet_shoot",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.missile_prepare": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/missile_prepare",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.missile_shoot": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/missile_shoot",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.teleport_prepare": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/teleport_prepare",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.minion_rune": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/minion_rune",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.minion_summon": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/minion_summon",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.rage_prepare": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/rage_prepare",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.night_lich.soul_star": {
+      "category": "neutral",
+      "sounds": [
+        {
+          "name": "sounds/bomd/night_lich/soul_star",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.idle": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_idle",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.hurt": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_hurt",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.cast": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_cast",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.spin_punch": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_spin_punch",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.laser_charge": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_laser_charge",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.death": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/gauntlet_death",
+          "volume": 1
+        }
+      ]
+    }
+  }
+}

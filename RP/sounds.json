@@ -1,0 +1,14 @@
+{
+  "entity_sounds": {
+    "entities": {
+      "bomd:night_lich": {
+        "events": {
+          "hurt": "mob.skeleton.hurt",
+          "death": "mob.skeleton.death"
+        },
+        "pitch": [1, 1],
+        "volume": 5
+      }
+    }
+  }
+}

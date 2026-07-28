@@ -1,0 +1,78 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:levitation_block",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:levitation_block.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 10
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1200
+      },
+      "minecraft:friction": 0.6,
+      "minecraft:light_emission": 4,
+      "minecraft:light_dampening": 0,
+      "minecraft:geometry": {
+        "identifier": "geometry.bomd.levitation_block"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_levitation_block",
+          "render_method": "alpha_test",
+          "ambient_occlusion": 0.85,
+          "face_dimming": false
+        }
+      },
+      "minecraft:item_visual": {
+        "geometry": "geometry.bomd.levitation_block",
+        "material_instances": {
+          "*": {
+            "texture": "bomd_levitation_block",
+            "render_method": "alpha_test",
+            "ambient_occlusion": 0.85,
+            "face_dimming": false
+          }
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          14,
+          16
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          16,
+          16
+        ]
+      },
+      "minecraft:loot": "loot_tables/blocks/levitation_block.json",
+      "minecraft:tick": {
+        "looping": true,
+        "interval_range": [
+          20,
+          20
+        ]
+      },
+      "bomd:levitation_table": {}
+    }
+  }
+}
