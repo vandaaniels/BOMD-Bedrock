@@ -1,0 +1,54 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:obsidilith_end_frame",
+      "menu_category": { "category": "construction" },
+      "states": { "bomd:eye": [false, true] }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:obsidilith_end_frame.name",
+      "minecraft:geometry": { "identifier": "geometry.bomd_obsidilith_end_frame" },
+      "minecraft:material_instances": {
+        "*": { "texture": "bomd_obsidilith_end_frame", "render_method": "alpha_test" },
+        "top": { "texture": "bomd_obsidilith_end_frame", "render_method": "alpha_test" },
+        "side": { "texture": "bomd_obsidilith_end_frame_side", "render_method": "alpha_test" },
+        "bottom": { "texture": "obsidian", "render_method": "alpha_test" },
+        "eye": { "texture": "endframe_eye", "render_method": "alpha_test" }
+      },
+      "minecraft:item_visual": {
+        "geometry": "geometry.bomd_obsidilith_end_frame",
+        "material_instances": {
+          "*": { "texture": "bomd_obsidilith_end_frame", "render_method": "alpha_test" },
+          "top": { "texture": "bomd_obsidilith_end_frame", "render_method": "alpha_test" },
+          "side": { "texture": "bomd_obsidilith_end_frame_side", "render_method": "alpha_test" },
+          "bottom": { "texture": "obsidian", "render_method": "alpha_test" },
+          "eye": { "texture": "endframe_eye", "render_method": "alpha_test" }
+        }
+      },
+      "minecraft:collision_box": { "origin": [-8, 0, -8], "size": [16, 13, 16] },
+      "minecraft:selection_box": { "origin": [-8, 0, -8], "size": [16, 13, 16] },
+      "minecraft:destructible_by_mining": { "seconds_to_destroy": 3 },
+      "minecraft:destructible_by_explosion": { "explosion_resistance": 1200 },
+      "bomd:obsidilith_end_frame": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('bomd:eye')",
+        "components": {
+          "minecraft:geometry": { "identifier": "geometry.bomd_obsidilith_end_frame_filled" },
+          "minecraft:material_instances": {
+            "*": { "texture": "bomd_obsidilith_end_frame_filled", "render_method": "alpha_test" },
+            "top": { "texture": "bomd_obsidilith_end_frame_filled", "render_method": "alpha_test" },
+            "side": { "texture": "bomd_obsidilith_end_frame_side", "render_method": "alpha_test" },
+            "bottom": { "texture": "obsidian", "render_method": "alpha_test" },
+            "eye": { "texture": "endframe_eye", "render_method": "alpha_test" }
+          },
+          "minecraft:collision_box": { "origin": [-8, 0, -8], "size": [16, 16, 16] },
+          "minecraft:selection_box": { "origin": [-8, 0, -8], "size": [16, 16, 16] },
+          "minecraft:light_emission": 4
+        }
+      }
+    ]
+  }
+}
