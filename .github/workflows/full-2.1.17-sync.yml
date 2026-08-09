@@ -1,0 +1,51 @@
+name: Full 2.1.17 source sync
+
+on:
+  push:
+    branches:
+      - sync/full-2.1.17
+
+permissions:
+  contents: write
+
+jobs:
+  sync-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout transport branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "4fb83462bda1b6b4f704add16abe826a406fc37fbe47f4a3c91a4004d9cf3098  .sync/payload.tar.xz" | sha256sum -c -
+          mkdir -p /tmp/bomd-2.1.17
+          tar -xJf .sync/payload.tar.xz -C /tmp/bomd-2.1.17
+          test -f /tmp/bomd-2.1.17/BP/manifest.json
+          test -f /tmp/bomd-2.1.17/RP/manifest.json
+          grep -q '"version": "2.9.0"' /tmp/bomd-2.1.17/BP/manifest.json
+          grep -q '"version": \[2, 1, 17\]' /tmp/bomd-2.1.17/BP/manifest.json
+          test -f /tmp/bomd-2.1.17/BP/scripts/progression/obsidilith.js
+          test -f /tmp/bomd-2.1.17/BP/structures/obsidilith_arena.mcstructure
+
+      - name: Replace main with 2.1.17
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          cp -a /tmp/bomd-2.1.17/. .
+          rm -rf patches .sync .sync_probe
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: replace main source with BOMD Bedrock 2.1.17"
+          git push origin main

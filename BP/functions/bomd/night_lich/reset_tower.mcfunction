@@ -1,1 +1,0 @@
-scriptevent bomd:reset_tower
