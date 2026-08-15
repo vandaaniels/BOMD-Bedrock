@@ -1,14 +1,11 @@
 // @ts-check
 
-import { LICH_PHANTOM_TYPE } from "../core/config.js";
-import { configureLichPhantom } from "../bosses/lich_phantoms.js";
+import { LICH_PHANTOM_TYPE, MINION_TAG } from "../core/config.js";
 import { attempt, isEntityUsable } from "../core/safe.js";
 import { add, normalize, scale } from "../core/vector.js";
 
-const PHANTOM_MIN_DISTANCE = 4;
-const PHANTOM_MAX_DISTANCE = 8;
-const PHANTOM_HALF_WIDTH = 0.9;
-const PHANTOM_HEIGHT = 0.9;
+const PHANTOM_HALF_WIDTH = 0.95;
+const PHANTOM_HEIGHT = 1.15;
 const PLACEMENT_ATTEMPTS = 30;
 
 function randomDirection() {
@@ -16,7 +13,7 @@ function randomDirection() {
   do {
     direction = {
       x: Math.random() - 0.5,
-      y: Math.random() * 0.7 + 0.15,
+      y: Math.random() - 0.5,
       z: Math.random() - 0.5
     };
   } while (
@@ -26,6 +23,13 @@ function randomDirection() {
     0.001
   );
   return normalize(direction);
+}
+
+function summonOffset() {
+  // Java RangedSpawnPosition receives a randVec whose magnitude is always
+  // below the 4-block minimum, so the final offset is a random 3D direction
+  // normalized to exactly four blocks.
+  return scale(randomDirection(), 4.0);
 }
 
 function openAir(dimension, location) {
@@ -51,7 +55,9 @@ function openAir(dimension, location) {
             y: Math.floor(y),
             z: Math.floor(z)
           });
-          if (!block?.isAir) return false;
+          if (!block?.isAir) {
+            return false;
+          }
         }
       }
     }
@@ -63,22 +69,23 @@ function openAir(dimension, location) {
 
 export function findPhantomSummonLocation(target) {
   for (let attemptIndex = 0; attemptIndex < PLACEMENT_ATTEMPTS; attemptIndex += 1) {
-    const radius =
-      PHANTOM_MIN_DISTANCE +
-      Math.random() * (PHANTOM_MAX_DISTANCE - PHANTOM_MIN_DISTANCE);
-    const location = add(target.location, scale(randomDirection(), radius));
-    if (openAir(target.dimension, location)) return location;
+    const location = add(target.location, summonOffset());
+    if (openAir(target.dimension, location)) {
+      return location;
+    }
   }
   return undefined;
 }
 
-export function spawnLichPhantom(boss, target, location, label) {
+export function spawnLichPhantom(boss, location, label) {
   const phantom = attempt(
     () => boss.dimension.spawnEntity(LICH_PHANTOM_TYPE, location),
     label
   );
-  if (!isEntityUsable(phantom)) return undefined;
+  if (!isEntityUsable(phantom)) {
+    return undefined;
+  }
 
-  configureLichPhantom(phantom, boss, target);
+  phantom.addTag(MINION_TAG);
   return phantom;
 }

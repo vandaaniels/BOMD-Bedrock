@@ -1,54 +1,54 @@
 {
   "format_version": 2,
   "header": {
-    "name": "BOMD Bedrock 1.5.4 Public Beta - Behavior",
-    "description": "Public Beta 1.5.4: fixes Soul Star remote-anchor queries, sanitizes localization files, and renames the native structure command to avoid the vanilla locate alias conflict.",
-    "uuid": "8f972cea-05d6-413c-9587-7d4b3064b091",
+    "name": "BOMD Bedrock 1.0 - Behavior",
+    "description": "A unofficial port",
+    "uuid": "ba9a866b-f98a-4de6-985b-c2ffbadbd4fa",
     "version": [
+      2,
       1,
-      5,
-      4
+      28
     ],
     "min_engine_version": [
       1,
       26,
-      30
+      40
     ]
   },
   "modules": [
     {
       "type": "data",
-      "uuid": "6811db9f-0255-4ca3-8e5e-6e3ee710c74a",
+      "uuid": "5412acd3-f6ce-4ce2-b850-ac49e52faf76",
       "version": [
+        2,
         1,
-        5,
-        4
+        28
       ]
     },
     {
       "type": "script",
       "language": "javascript",
       "entry": "scripts/main.js",
-      "uuid": "0d0ae24f-5c84-4635-98ff-ae0d02bea5bf",
+      "uuid": "097db8fa-c26a-4770-84ee-1902524a5296",
       "version": [
+        2,
         1,
-        5,
-        4
+        28
       ]
     }
   ],
   "dependencies": [
     {
-      "uuid": "8ebcf828-88f5-480c-8606-d91b3aa7e5ef",
+      "uuid": "5e6d8ae1-2eca-463b-94d0-b39a219d01d4",
       "version": [
+        2,
         1,
-        5,
-        4
+        28
       ]
     },
     {
       "module_name": "@minecraft/server",
-      "version": "2.9.0-beta"
+      "version": "2.9.0"
     }
   ],
   "metadata": {
@@ -56,7 +56,7 @@
       "Rossetti",
       "Barribob (original BOMD assets)"
     ],
-    "license": "LicenseRef-BOMD-Bedrock AND LGPL-3.0-only",
+    "license": "MIT AND LGPL-3.0-only",
     "product_type": "addon"
   }
 }

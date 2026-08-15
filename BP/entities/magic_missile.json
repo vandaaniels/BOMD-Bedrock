@@ -1,5 +1,5 @@
 {
-  "format_version": "1.26.30",
+  "format_version": "1.26.0",
   "minecraft:entity": {
     "description": {
       "identifier": "bomd:night_lich_magic_missile",
@@ -9,6 +9,9 @@
       "spawn_category": "misc"
     },
     "components": {
+      "minecraft:type_family": {
+        "family": ["bomd_night_lich_projectile", "projectile"]
+      },
       "minecraft:collision_box": {
         "height": 0.25,
         "width": 0.25
@@ -24,18 +27,15 @@
         "uncertainty_multiplier": 0,
         "isolated_physics": true
       },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
       "minecraft:damage_sensor": {
         "triggers": {
           "cause": "all",
           "deals_damage": "no"
         }
-      },
-      "minecraft:pushable_by_entity": {
-        "presets": [
-          {
-            "push_mode": "none"
-          }
-        ]
       }
     }
   }

@@ -1,0 +1,189 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_void_blossom": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        },
+        {
+          "FlowerCenter": "Material.emissive"
+        },
+        {
+          "Thorns": "Material.emissive"
+        },
+        {
+          "SmallerThorns": "Material.emissive"
+        },
+        {
+          "Spike": "Material.emissive"
+        },
+        {
+          "Spike2": "Material.emissive"
+        },
+        {
+          "Spike3": "Material.emissive"
+        },
+        {
+          "Spike4": "Material.emissive"
+        },
+        {
+          "Spike5": "Material.emissive"
+        },
+        {
+          "Spike6": "Material.emissive"
+        },
+        {
+          "Spike7": "Material.emissive"
+        },
+        {
+          "Spike8": "Material.emissive"
+        },
+        {
+          "Spike9": "Material.emissive"
+        },
+        {
+          "Spike10": "Material.emissive"
+        },
+        {
+          "Spike11": "Material.emissive"
+        },
+        {
+          "Spike12": "Material.emissive"
+        },
+        {
+          "Spike13": "Material.emissive"
+        },
+        {
+          "Spike14": "Material.emissive"
+        },
+        {
+          "Spike15": "Material.emissive"
+        },
+        {
+          "Spike16": "Material.emissive"
+        },
+        {
+          "Spike17": "Material.emissive"
+        },
+        {
+          "Spike18": "Material.emissive"
+        },
+        {
+          "Spike19": "Material.emissive"
+        },
+        {
+          "Spike20": "Material.emissive"
+        },
+        {
+          "Spike21": "Material.emissive"
+        },
+        {
+          "Spike22": "Material.emissive"
+        },
+        {
+          "Spike23": "Material.emissive"
+        },
+        {
+          "Spike24": "Material.emissive"
+        },
+        {
+          "Spike25": "Material.emissive"
+        },
+        {
+          "Spike26": "Material.emissive"
+        },
+        {
+          "Spike27": "Material.emissive"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "color": {
+        "r": "1.0",
+        "g": "q.property('bomd:void_hurt') ? 0.35 : 1.0",
+        "b": "q.property('bomd:void_hurt') ? 0.35 : 1.0",
+        "a": "1.0 - (q.property('bomd:void_death_tick') / 90.0)"
+      },
+      "uv_anim": {
+        "offset": [
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1
+        ]
+      }
+    },
+    "controller.render.bomd_void_blossom_glow": {
+      "geometry": "Geometry.default",
+      "materials": [
+        { "*": "Material.emissive" }
+      ],
+      "textures": ["Texture.default"],
+      "part_visibility": [
+        { "*": false },
+        { "FlowerCenter": true },
+        { "Thorns": true },
+        { "SmallerThorns": true },
+        { "Spike": true },
+        { "Spike2": true },
+        { "Spike3": true },
+        { "Spike4": true },
+        { "Spike5": true },
+        { "Spike6": true },
+        { "Spike7": true },
+        { "Spike8": true },
+        { "Spike9": true },
+        { "Spike10": true },
+        { "Spike11": true },
+        { "Spike12": true },
+        { "Spike13": true },
+        { "Spike14": true },
+        { "Spike15": true },
+        { "Spike16": true },
+        { "Spike17": true },
+        { "Spike18": true },
+        { "Spike19": true },
+        { "Spike20": true },
+        { "Spike21": true },
+        { "Spike22": true },
+        { "Spike23": true },
+        { "Spike24": true },
+        { "Spike25": true },
+        { "Spike26": true },
+        { "Spike27": true }
+      ],
+      "color": {
+        "r": 0.82,
+        "g": 0.35,
+        "b": 1.0,
+        "a": "q.property('bomd:void_energy') == 0 ? 0.0 : 0.06 + q.property('bomd:void_energy') * 0.16 + math.abs(math.sin(q.life_time * 540.0)) * 0.12"
+      }
+    },
+    "controller.render.bomd_void_projectile": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "uv_anim": {
+        "offset": [
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1
+        ]
+      }
+    }
+  }
+}

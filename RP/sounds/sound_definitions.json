@@ -86,7 +86,7 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_idle",
+          "name": "sounds/bomd/nether_gauntlet/idle",
           "volume": 1
         }
       ]
@@ -95,7 +95,7 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_hurt",
+          "name": "sounds/bomd/nether_gauntlet/hurt",
           "volume": 1
         }
       ]
@@ -104,7 +104,16 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_cast",
+          "name": "sounds/bomd/nether_gauntlet/cast",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.nether_gauntlet.energized": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/energized",
           "volume": 1
         }
       ]
@@ -113,7 +122,7 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_spin_punch",
+          "name": "sounds/bomd/nether_gauntlet/energized",
           "volume": 1
         }
       ]
@@ -122,7 +131,7 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_laser_charge",
+          "name": "sounds/bomd/nether_gauntlet/laser_charge",
           "volume": 1
         }
       ]
@@ -131,10 +140,94 @@
       "category": "hostile",
       "sounds": [
         {
-          "name": "sounds/bomd/nether_gauntlet/gauntlet_death",
+          "name": "sounds/bomd/nether_gauntlet/death",
           "volume": 1
         }
       ]
+    },
+    "bomd.nether_gauntlet.energy_shield": {
+      "category": "hostile",
+      "sounds": [
+        {
+          "name": "sounds/bomd/nether_gauntlet/energy_shield",
+          "volume": 1
+        }
+      ]
+    },
+    "bomd.void_blossom.burrow": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/burrow", "volume": 1 }]
+    },
+    "bomd.void_blossom.fall": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/fall", "volume": 1 }]
+    },
+    "bomd.void_blossom.petal_blade": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/petal_blade", "volume": 1 }]
+    },
+    "bomd.void_blossom.spike": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/spike", "volume": 1 }]
+    },
+    "bomd.void_blossom.spike_indicator": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/spike_indicator", "volume": 1 }]
+    },
+    "bomd.void_blossom.spore_impact": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/spore_impact", "volume": 1 }]
+    },
+    "bomd.void_blossom.spore_prepare": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/spore_prepare", "volume": 1 }]
+    },
+    "bomd.void_blossom.wave_indicator": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/wave_indicator", "volume": 1 }]
+    },
+    "bomd.void_blossom.hurt": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/void_blossom/fall", "volume": 0.55, "pitch": 1.35 }]
+    },
+    "bomd.items.earthdive": {
+      "category": "player",
+      "sounds": [
+        { "name": "sounds/bomd/items/earthdive_spear_throw", "volume": 1 },
+        { "name": "sounds/bomd/items/earthdive_spear_throw2", "volume": 1 }
+      ]
+    },
+    "bomd.items.brimstone": {
+      "category": "player",
+      "sounds": [{ "name": "sounds/bomd/items/brimstone", "volume": 1 }]
+    },
+    "bomd.obsidilith.prepare_attack": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/obsidilith_prepare_attack", "volume": 1 }]
+    },
+    "bomd.obsidilith.burst": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/obsidilith_burst", "volume": 1 }]
+    },
+    "bomd.obsidilith.spike": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/spike", "volume": 1 }]
+    },
+    "bomd.obsidilith.spike_indicator": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/spike_indicator", "volume": 1 }]
+    },
+    "bomd.obsidilith.teleport": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/teleport_prepare", "volume": 1 }]
+    },
+    "bomd.obsidilith.wave": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/wave_indicator", "volume": 1 }]
+    },
+    "bomd.obsidilith.wave_indicator": {
+      "category": "hostile",
+      "sounds": [{ "name": "sounds/bomd/obsidilith/wave_indicator", "volume": 1 }]
     }
   }
 }

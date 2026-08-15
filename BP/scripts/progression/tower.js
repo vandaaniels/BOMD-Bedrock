@@ -2,7 +2,6 @@
 
 import {
   EquipmentSlot,
-  GameMode,
   ItemStack,
   system,
   world
@@ -26,12 +25,9 @@ import {
   TOWER_GUARD_TAG,
   TOWER_INITIALIZED_PROPERTY,
   TOWER_LOOT_MASK_PROPERTY,
-  TOWER_ROTATION_PROPERTY,
-  TOWER_PENDING_EXPERIENCE_PROPERTY
+  TOWER_ROTATION_PROPERTY
 } from "../core/config.js";
-import { translate } from "../core/i18n.js";
 import { attempt, isEntityUsable, schedule } from "../core/safe.js";
-import { fitVerticalSpan, isLocationWithinWorld, verticalSpanFits } from "../core/world_bounds.js";
 import { distance } from "../core/vector.js";
 import {
   playSound,
@@ -41,14 +37,7 @@ import {
 } from "../visuals/frost.js";
 import { cleanupEncounterEntities } from "../bosses/encounter_cleanup.js";
 import { consumeSelectedItem } from "./inventory.js";
-import {
-  registerStructureLocation,
-  setRegisteredStructureDefeated
-} from "./structure_locator.js";
-import {
-  markLocatorTowerAvailable,
-  markLocatorTowerDefeated
-} from "./night_lich_tower_locator.js";
+import { recordDefeatedTowerLocation } from "./tower_locator.js";
 
 const CHEST_OFFSETS = Object.freeze([
   Object.freeze({ x: 0, y: -21, z: 0 }),
@@ -65,17 +54,6 @@ const GUARD_OFFSETS = Object.freeze([
 
 const COMPLETE_CHEST_MASK = (1 << CHEST_OFFSETS.length) - 1;
 const COMPLETE_GUARD_MASK = (1 << GUARD_OFFSETS.length) - 1;
-// The converted structure begins 23 blocks below the ritual center and ends
-// 55 blocks above it (79 blocks total).
-const TOWER_MIN_Y_OFFSET = -23;
-const TOWER_MAX_Y_OFFSET = 55;
-const INVALID_BOUNDS_TAG = "bomd_invalid_tower_bounds";
-const TOWER_PLACEHOLDER_TYPES = new Set([
-  "minecraft:info_update",
-  "minecraft:info_update2",
-  "minecraft:unknown"
-]);
-const scannedPlaceholderChunks = new Set();
 let registered = false;
 let scanStarted = false;
 
@@ -109,44 +87,11 @@ function rotateOffset(offset, rotation) {
   return offset;
 }
 
-function safeTowerBlock(dimension, location) {
-  if (!isLocationWithinWorld(dimension, location)) return undefined;
-  return attempt(() => dimension.getBlock(location), "read Lich Tower block");
-}
-
 function altarBlocks(anchor) {
   const center = towerCenter(anchor);
   return ALTAR_OFFSETS.map((offset) =>
-    safeTowerBlock(anchor.dimension, addLocation(center, offset))
+    anchor.dimension.getBlock(addLocation(center, offset))
   ).filter(Boolean);
-}
-
-function ensureTowerAltars(anchor) {
-  const center = towerCenter(anchor);
-  let complete = true;
-  for (const offset of ALTAR_OFFSETS) {
-    const location = addLocation(center, offset);
-    let block = safeTowerBlock(anchor.dimension, location);
-    if (!block) {
-      complete = false;
-      continue;
-    }
-    if (block.typeId !== ALTAR_BLOCK) {
-      const repaired = attempt(() => {
-        block.setType(ALTAR_BLOCK);
-        block = anchor.dimension.getBlock(location);
-        if (block?.typeId === ALTAR_BLOCK) {
-          block.setPermutation(
-            block.permutation.withState(ALTAR_LIT_STATE, false)
-          );
-          return true;
-        }
-        return false;
-      }, "repair Lich Tower altar marker");
-      if (repaired !== true) complete = false;
-    }
-  }
-  return complete;
 }
 
 function nearestAnchor(dimension, location, radius = 24) {
@@ -193,8 +138,13 @@ function detectTowerRotation(anchor) {
   for (let rotation = 0; rotation < 4; rotation += 1) {
     let score = 0;
     for (const offset of CHEST_OFFSETS) {
-      const location = addLocation(center, rotateOffset(offset, rotation));
-      const block = safeTowerBlock(anchor.dimension, location);
+      const block = attempt(
+        () =>
+          anchor.dimension.getBlock(
+            addLocation(center, rotateOffset(offset, rotation))
+          ),
+        "detect Lich Tower rotation"
+      );
       if (block?.typeId === "minecraft:chest") {
         score += 1;
       }
@@ -212,8 +162,23 @@ function detectTowerRotation(anchor) {
   return bestRotation;
 }
 
+function ensureTowerAltars(anchor) {
+  const center = towerCenter(anchor);
+  for (const offset of ALTAR_OFFSETS) {
+    const block = attempt(
+      () => anchor.dimension.getBlock(addLocation(center, offset)),
+      "restore missing Night Lich altar block"
+    );
+    if (!block || block.typeId === ALTAR_BLOCK) continue;
+    attempt(
+      () => block.setType(ALTAR_BLOCK),
+      "place missing Night Lich altar block"
+    );
+  }
+}
+
 function fillChest(anchor, location) {
-  const block = safeTowerBlock(anchor.dimension, location);
+  const block = anchor.dimension.getBlock(location);
   const container = block?.getComponent("minecraft:inventory")?.container;
   if (!container) {
     return false;
@@ -236,7 +201,8 @@ function fillChest(anchor, location) {
 }
 
 function chestAlreadyPopulated(anchor, location) {
-  const container = safeTowerBlock(anchor.dimension, location)
+  const container = anchor.dimension
+    .getBlock(location)
     ?.getComponent("minecraft:inventory")?.container;
   return container
     ? container.emptySlotsCount < container.size
@@ -262,6 +228,7 @@ function spawnGuard(anchor, location) {
   }
 
   guard.addTag(TOWER_GUARD_TAG);
+  guard.nameTag = "Tower Guardian";
   const equipment = guard.getComponent("minecraft:equippable");
   equipment?.setEquipment(
     EquipmentSlot.Mainhand,
@@ -283,35 +250,13 @@ function initializeTower(anchor) {
     return false;
   }
 
-  const registeredCenter = towerCenter(anchor);
-  registerStructureLocation("night_lich", anchor.dimension, registeredCenter, {
-    defeated: anchor.getDynamicProperty(TOWER_DEFEATED_PROPERTY) === true
-  });
-  const centerY = registeredCenter.y;
-  if (!verticalSpanFits(anchor.dimension, centerY, TOWER_MIN_Y_OFFSET, TOWER_MAX_Y_OFFSET)) {
-    if (!anchor.hasTag(INVALID_BOUNDS_TAG)) {
-      attempt(() => anchor.addTag(INVALID_BOUNDS_TAG), "mark invalid Lich Tower anchor");
-      console.warn(`[BOMD] Ignoring Lich Tower anchor at Y ${centerY}: the 79-block structure does not fit inside this dimension.`);
-    }
-    return false;
-  }
-
-  // Structures saved with an older custom-block palette can appear as the
-  // brown update/marker block in Bedrock. Replace the four known ritual
-  // positions with the registered altar before reading rotation or state.
-  if (!ensureTowerAltars(anchor)) {
-    anchor.setDynamicProperty(TOWER_INITIALIZED_PROPERTY, false);
-    return false;
-  }
-
+  anchor.nameTag = "Night Lich Tower";
+  ensureTowerAltars(anchor);
   if (anchor.getDynamicProperty(TOWER_ACTIVE_PROPERTY) === undefined) {
     anchor.setDynamicProperty(TOWER_ACTIVE_PROPERTY, false);
   }
   if (anchor.getDynamicProperty(TOWER_DEFEATED_PROPERTY) === undefined) {
     anchor.setDynamicProperty(TOWER_DEFEATED_PROPERTY, false);
-  }
-  if (anchor.getDynamicProperty(TOWER_PENDING_EXPERIENCE_PROPERTY) === undefined) {
-    anchor.setDynamicProperty(TOWER_PENDING_EXPERIENCE_PROPERTY, 0);
   }
 
   const rotation = detectTowerRotation(anchor);
@@ -421,12 +366,15 @@ function findBossSpawn(anchor, center) {
 
     let clear = true;
     for (let y = 0; y < 4; y += 1) {
-      const location = {
-        x: candidate.x,
-        y: candidate.y + y,
-        z: candidate.z
-      };
-      const block = safeTowerBlock(anchor.dimension, location);
+      const block = attempt(
+        () =>
+          anchor.dimension.getBlock({
+            x: candidate.x,
+            y: candidate.y + y,
+            z: candidate.z
+          }),
+        "check Night Lich ritual spawn"
+      );
       if (!block?.isAir) {
         clear = false;
         break;
@@ -511,7 +459,9 @@ function summonNightLich(anchor) {
     location: center,
     maxDistance: 64
   })) {
-    player.sendMessage(translate("bomd.message.tower.lich_awakes"));
+    player.sendMessage(
+      "§8The four Soul Stars fade. §bThe Night Lich awakens."
+    );
   }
 }
 
@@ -530,27 +480,35 @@ function handleAltarInteract(event) {
     !isEntityUsable(anchor) ||
     !blockBelongsToAnchor(anchor, block)
   ) {
-    player.sendMessage(translate("bomd.message.tower.unregistered_altar"));
+    player.sendMessage(
+      "§c[BOMD] This altar does not belong to a registered tower."
+    );
     return;
   }
   if (
     anchor.getDynamicProperty(TOWER_INITIALIZED_PROPERTY) !== true
   ) {
-    player.sendMessage(translate("bomd.message.tower.initializing"));
+    player.sendMessage(
+      "§7[BOMD] The tower is still initializing its chests and guardians."
+    );
     return;
   }
 
   const inventory = player.getComponent("minecraft:inventory")?.container;
   const held = inventory?.getItem(player.selectedSlotIndex);
   if (!held || held.typeId !== SOUL_STAR_ITEM) {
-    player.onScreenDisplay.setActionBar(translate("bomd.message.tower.requires_soul_star"));
+    player.onScreenDisplay.setActionBar(
+      "§7The altar requires a §bSoul Star§7."
+    );
     return;
   }
   if (
     anchor.getDynamicProperty(TOWER_ACTIVE_PROPERTY) === true ||
     anchor.getDynamicProperty(TOWER_DEFEATED_PROPERTY) === true
   ) {
-    player.onScreenDisplay.setActionBar(translate("bomd.message.tower.ritual_resolved"));
+    player.onScreenDisplay.setActionBar(
+      "§7This tower's ritual has already been completed."
+    );
     return;
   }
   if (!consumeSelectedItem(player, SOUL_STAR_ITEM)) {
@@ -584,7 +542,9 @@ function handleAltarInteract(event) {
       candidate.typeId === ALTAR_BLOCK &&
       candidate.permutation.getState(ALTAR_LIT_STATE) === true
   ).length;
-  player.onScreenDisplay.setActionBar(translate("bomd.message.tower.ritual_progress", [filled]));
+  player.onScreenDisplay.setActionBar(
+    `§bRitual del Night Lich §7— §f${filled}/4 altares`
+  );
   if (filled === 4) {
     anchor.setDynamicProperty(TOWER_ACTIVE_PROPERTY, true);
     schedule(
@@ -607,11 +567,15 @@ function discoverAnchorFromAltar(block) {
       z: block.location.z - altarOffset.z
     };
     const completePattern = ALTAR_OFFSETS.every((offset) => {
-      const candidate = safeTowerBlock(block.dimension, {
-        x: center.x + offset.x,
-        y: center.y,
-        z: center.z + offset.z
-      });
+      const candidate = attempt(
+        () =>
+          block.dimension.getBlock({
+            x: center.x + offset.x,
+            y: center.y,
+            z: center.z + offset.z
+          }),
+        "discover generated Lich Tower altar"
+      );
       return candidate?.typeId === ALTAR_BLOCK;
     });
     if (!completePattern) {
@@ -654,7 +618,7 @@ export function resetTower(anchor) {
   }
   for (const offset of ALTAR_OFFSETS) {
     const location = addLocation(center, offset);
-    const block = safeTowerBlock(anchor.dimension, location);
+    const block = anchor.dimension.getBlock(location);
     if (!block) {
       continue;
     }
@@ -668,75 +632,9 @@ export function resetTower(anchor) {
   }
   anchor.setDynamicProperty(TOWER_ACTIVE_PROPERTY, false);
   anchor.setDynamicProperty(TOWER_DEFEATED_PROPERTY, false);
-  setRegisteredStructureDefeated("night_lich", anchor.dimension, center, false);
-  markLocatorTowerAvailable(anchor.dimension, center);
   anchor.setDynamicProperty(TOWER_GUARD_MASK_PROPERTY, 0);
-  anchor.setDynamicProperty(TOWER_PENDING_EXPERIENCE_PROPERTY, 0);
   anchor.setDynamicProperty(TOWER_INITIALIZED_PROPERTY, false);
   spawnBurst(anchor.dimension, center, 30, 2, FROST_PARTICLE);
-  return true;
-}
-
-function pendingExperience(anchor) {
-  const value = Number(anchor.getDynamicProperty(TOWER_PENDING_EXPERIENCE_PROPERTY) ?? 0);
-  return Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
-}
-
-function experienceAnchor(dimension, location) {
-  return dimension
-    .getEntities({ type: ANCHOR_TYPE, location, maxDistance: 80 })
-    .filter(isEntityUsable)
-    .sort((left, right) => {
-      const leftActive = left.getDynamicProperty(TOWER_ACTIVE_PROPERTY) === true ? 0 : 1;
-      const rightActive = right.getDynamicProperty(TOWER_ACTIVE_PROPERTY) === true ? 0 : 1;
-      return leftActive - rightActive || distance(left.location, location) - distance(right.location, location);
-    })[0];
-}
-
-export function queueTowerExperience(dimension, location, amount) {
-  const value = Math.max(0, Math.floor(amount));
-  if (value <= 0) return true;
-  const anchor = experienceAnchor(dimension, location);
-  if (!isEntityUsable(anchor)) return false;
-  anchor.setDynamicProperty(
-    TOWER_PENDING_EXPERIENCE_PROPERTY,
-    pendingExperience(anchor) + value
-  );
-  return true;
-}
-
-export function consumeTowerExperience(dimension, location, amount) {
-  const value = Math.max(0, Math.floor(amount));
-  if (value <= 0) return true;
-  const anchor = experienceAnchor(dimension, location);
-  if (!isEntityUsable(anchor)) return false;
-  anchor.setDynamicProperty(
-    TOWER_PENDING_EXPERIENCE_PROPERTY,
-    Math.max(0, pendingExperience(anchor) - value)
-  );
-  return true;
-}
-
-function deliverPendingTowerExperience(anchor) {
-  // While the death sequence is still active, the pending value is a reserve
-  // backing the scheduled pulses. Releasing it early would duplicate the
-  // reward: the scan loop could pay all 1,500 XP and the pulses would then pay
-  // it again. Only release a remainder after the tower is marked defeated.
-  if (anchor.getDynamicProperty(TOWER_DEFEATED_PROPERTY) !== true) return false;
-  const amount = pendingExperience(anchor);
-  if (amount <= 0) return false;
-  const player = anchor.dimension
-    .getPlayers({ location: anchor.location, maxDistance: 32 })
-    .filter(isEntityUsable)
-    .sort((left, right) => distance(left.location, anchor.location) - distance(right.location, anchor.location))[0];
-  if (!isEntityUsable(player)) return false;
-  const delivered = attempt(() => {
-    player.addExperience(amount);
-    return true;
-  }, "deliver pending Night Lich experience") === true;
-  if (!delivered) return false;
-  anchor.setDynamicProperty(TOWER_PENDING_EXPERIENCE_PROPERTY, 0);
-  spawnBurst(anchor.dimension, { x: anchor.location.x, y: anchor.location.y + 1, z: anchor.location.z }, 12, 0.9, SOUL_FLAME_PARTICLE);
   return true;
 }
 
@@ -763,8 +661,7 @@ export function markTowerDefeated(dimension, location) {
 
   anchor.setDynamicProperty(TOWER_ACTIVE_PROPERTY, false);
   anchor.setDynamicProperty(TOWER_DEFEATED_PROPERTY, true);
-  setRegisteredStructureDefeated("night_lich", dimension, anchor.location, true);
-  markLocatorTowerDefeated(dimension, anchor.location);
+  recordDefeatedTowerLocation(anchor.location);
   for (const guard of dimension.getEntities({
     tags: [TOWER_GUARD_TAG],
     location: anchor.location,
@@ -774,64 +671,10 @@ export function markTowerDefeated(dimension, location) {
   }
 }
 
-function placeholderPatternAt(dimension, center) {
-  return ALTAR_OFFSETS.every((offset) => {
-    const block = safeTowerBlock(dimension, addLocation(center, offset));
-    return (
-      block?.typeId === ALTAR_BLOCK ||
-      TOWER_PLACEHOLDER_TYPES.has(block?.typeId ?? "")
-    );
-  });
-}
-
-function repairPlaceholderTowerNear(player) {
-  if (!isEntityUsable(player)) return false;
-  if (isEntityUsable(nearestAnchor(player.dimension, player.location, 48))) {
-    return false;
-  }
-  const base = {
-    x: Math.floor(player.location.x),
-    y: Math.floor(player.location.y),
-    z: Math.floor(player.location.z)
-  };
-  for (let y = base.y - 8; y <= base.y + 8; y += 1) {
-    for (let x = base.x - 12; x <= base.x + 12; x += 1) {
-      for (let z = base.z - 12; z <= base.z + 12; z += 1) {
-        const block = safeTowerBlock(player.dimension, { x, y, z });
-        if (!TOWER_PLACEHOLDER_TYPES.has(block?.typeId ?? "")) continue;
-        for (const offset of ALTAR_OFFSETS) {
-          const center = {
-            x: x - offset.x,
-            y,
-            z: z - offset.z
-          };
-          if (!placeholderPatternAt(player.dimension, center)) continue;
-          const anchor = attempt(
-            () => player.dimension.spawnEntity(ANCHOR_TYPE, {
-              x: center.x + 0.5,
-              y: center.y + 0.5,
-              z: center.z + 0.5
-            }),
-            "register placeholder Lich Tower"
-          );
-          if (isEntityUsable(anchor)) {
-            ensureTowerAltars(anchor);
-            schedule(2, () => initializeTower(anchor), "initialize repaired Lich Tower");
-            return true;
-          }
-        }
-      }
-    }
-  }
-  return false;
-}
-
 function scanAnchors() {
   for (const dimensionId of ["overworld", "nether", "the_end"]) {
     const dimension = world.getDimension(dimensionId);
     for (const anchor of dimension.getEntities({ type: ANCHOR_TYPE })) {
-      if (anchor.hasTag(INVALID_BOUNDS_TAG)) continue;
-      deliverPendingTowerExperience(anchor);
       if (
         anchor.getDynamicProperty(TOWER_INITIALIZED_PROPERTY) !== true ||
         anchor.getDynamicProperty(TOWER_LOOT_MASK_PROPERTY) === undefined ||
@@ -842,77 +685,6 @@ function scanAnchors() {
       }
     }
   }
-  // Scan at most one newly entered player chunk per manager pass. This
-  // repairs older towers without repeatedly sweeping the same area.
-  for (const player of world.getAllPlayers()) {
-    const chunkKey = `${player.dimension.id}:${Math.floor(player.location.x / 16)}:${Math.floor(player.location.z / 16)}`;
-    if (scannedPlaceholderChunks.has(chunkKey)) continue;
-    if (scannedPlaceholderChunks.size >= 2048) scannedPlaceholderChunks.clear();
-    scannedPlaceholderChunks.add(chunkKey);
-    repairPlaceholderTowerNear(player);
-    break;
-  }
-}
-
-function buildTowerForPlayer(player) {
-  if (!isEntityUsable(player) || player.typeId !== "minecraft:player") return false;
-  const dimension = player.dimension;
-  const centerX = Math.floor(player.location.x);
-  const centerZ = Math.floor(player.location.z);
-  const desiredCenterY = Math.floor(player.location.y);
-  const centerY = fitVerticalSpan(
-    dimension,
-    desiredCenterY,
-    TOWER_MIN_Y_OFFSET,
-    TOWER_MAX_Y_OFFSET
-  );
-  if (centerY === undefined) {
-    player.sendMessage(translate("bomd.message.tower.build_failed_bounds"));
-    return false;
-  }
-
-  for (const anchor of dimension.getEntities({
-    type: ANCHOR_TYPE,
-    location: player.location,
-    maxDistance: 12
-  })) {
-    attempt(() => anchor.remove(), "remove previous manual Lich Tower anchor");
-  }
-
-  const origin = {
-    x: centerX - 16,
-    y: centerY + TOWER_MIN_Y_OFFSET,
-    z: centerZ - 14
-  };
-  const command = `structure load bomd:night_lich_tower ${origin.x} ${origin.y} ${origin.z}`;
-  const result = attempt(() => dimension.runCommand(command), "load bounded Lich Tower structure");
-  if (!result || result.successCount < 1) {
-    player.sendMessage(translate("bomd.message.tower.build_failed"));
-    return false;
-  }
-
-  const anchor = attempt(
-    () => dimension.spawnEntity(ANCHOR_TYPE, {
-      x: centerX + 0.5,
-      y: centerY + 0.5,
-      z: centerZ + 0.5
-    }),
-    "spawn bounded Lich Tower anchor"
-  );
-  if (!isEntityUsable(anchor)) {
-    player.sendMessage(translate("bomd.message.tower.build_failed"));
-    return false;
-  }
-
-  schedule(10, () => initializeTower(anchor), "initialize manually built Lich Tower");
-  player.sendMessage(translate("bomd.function.lich.build_tower.1"));
-  if (centerY !== desiredCenterY) {
-    player.sendMessage(translate("bomd.function.lich.build_tower.adjusted", [centerY]));
-  }
-  if (player.getGameMode() === GameMode.Creative) {
-    player.sendMessage(translate("bomd.function.lich.build_tower.2"));
-  }
-  return true;
 }
 
 export function registerTowerEvents(blockComponentRegistry) {
@@ -936,13 +708,6 @@ export function registerTowerEvents(blockComponentRegistry) {
     });
 
     system.afterEvents.scriptEventReceive.subscribe((event) => {
-      if (event.id === "bomd:build_lich_tower") {
-        const source = event.sourceEntity;
-        if (isEntityUsable(source) && source.typeId === "minecraft:player") {
-          buildTowerForPlayer(source);
-        }
-        return;
-      }
       if (event.id !== "bomd:reset_tower") {
         return;
       }
@@ -961,9 +726,13 @@ export function registerTowerEvents(blockComponentRegistry) {
         96
       );
       if (resetTower(anchor)) {
-        player.sendMessage(translate("bomd.message.tower.reset_success"));
+        player.sendMessage(
+          "§b[BOMD] §fThe nearby Night Lich tower was reset."
+        );
       } else {
-        player.sendMessage(translate("bomd.message.tower.reset_missing"));
+        player.sendMessage(
+          "§c[BOMD] No registered tower exists within 96 blocks."
+        );
       }
     });
   }

@@ -1,0 +1,36 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "bomd:mob_ward"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A",
+      "H",
+      "C"
+    ],
+    "key": {
+      "A": {
+        "item": "bomd:ancient_anima"
+      },
+      "H": {
+        "item": "bomd:obsidian_heart"
+      },
+      "C": {
+        "item": "minecraft:obsidian"
+      }
+    },
+    "unlock": [
+      {
+        "item": "bomd:obsidian_heart"
+      }
+    ],
+    "result": {
+      "item": "bomd:mob_ward",
+      "count": 1
+    }
+  }
+}

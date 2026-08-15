@@ -1,0 +1,55 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:mob_ward",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:mob_ward.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1200
+      },
+      "minecraft:geometry": {
+        "identifier": "geometry.bomd_mob_ward"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_mob_ward",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:item_visual": {
+        "geometry": "geometry.bomd_mob_ward_item",
+        "material_instances": {
+          "*": {
+            "texture": "bomd_mob_ward_item",
+            "render_method": "alpha_test"
+          }
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [-2, 0, -2],
+        "size": [4, 16, 4]
+      },
+      "minecraft:selection_box": {
+        "origin": [-6, 0, -6],
+        "size": [12, 16, 12]
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:tick": {
+        "looping": true,
+        "interval_range": [
+          20,
+          20
+        ]
+      },
+      "bomd:mob_ward": {}
+    }
+  }
+}

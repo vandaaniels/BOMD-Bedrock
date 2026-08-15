@@ -1,0 +1,33 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:night_lich_tower_seed"
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:night_lich_tower_seed.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3600
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 3600000
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": false,
+      "minecraft:geometry": {
+        "identifier": "minecraft:geometry.full_block"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_altar_dark",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:tick": {
+        "looping": true,
+        "interval_range": [1, 1]
+      },
+      "bomd:night_lich_tower_seed": {}
+    }
+  }
+}

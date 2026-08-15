@@ -1,2 +1,2 @@
 summon bomd:nether_gauntlet ~ ~1 ~
-tellraw @a[r=48] {"rawtext":[{"translate":"bomd.function.gauntlet.spawn"}]}
+tellraw @s {"rawtext":[{"text":"§4[BOMD] §fNether Gauntlet summoned with its eye closed. Aim at the frontal eye to awaken it; the rest of its body rejects damage."}]}

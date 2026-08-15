@@ -44,7 +44,10 @@
           "code_pose_controller"
         ]
       },
-      "render_controllers": ["controller.render.bomd_night_lich"],
+      "render_controllers": [
+        "controller.render.bomd_night_lich",
+        "controller.render.bomd_night_lich_glow"
+      ],
       "spawn_egg": {
         "base_color": "#111827",
         "overlay_color": "#67E8F9"

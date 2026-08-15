@@ -1,0 +1,36 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "bomd:blast_amplifier"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "CCC",
+      "CEC",
+      "CHC"
+    ],
+    "key": {
+      "C": {
+        "item": "minecraft:obsidian"
+      },
+      "E": {
+        "item": "bomd:blazing_eye"
+      },
+      "H": {
+        "item": "bomd:obsidian_heart"
+      }
+    },
+    "unlock": [
+      {
+        "item": "bomd:obsidian_heart"
+      }
+    ],
+    "result": {
+      "item": "bomd:monolith",
+      "count": 1
+    }
+  }
+}

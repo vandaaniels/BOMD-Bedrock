@@ -8,6 +8,40 @@
         },
         "pitch": [1, 1],
         "volume": 5
+      },
+      "bomd:lich_phantom": {
+        "events": {
+          "ambient": "mob.phantom.idle",
+          "hurt": "mob.phantom.hurt",
+          "death": "mob.phantom.death"
+        },
+        "pitch": [0.85, 1.05],
+        "volume": 1.5
+      },
+      "bomd:nether_gauntlet": {
+        "events": {
+          "ambient": "bomd.nether_gauntlet.idle",
+          "hurt": "bomd.nether_gauntlet.hurt",
+          "death": "bomd.nether_gauntlet.death"
+        },
+        "pitch": [1, 1],
+        "volume": 3
+      },
+      "bomd:void_blossom": {
+        "events": {
+          "hurt": "bomd.void_blossom.hurt",
+          "death": "bomd.void_blossom.fall"
+        },
+        "pitch": [1, 1],
+        "volume": 3
+      },
+      "bomd:obsidilith": {
+        "events": {
+          "hurt": "dig.basalt",
+          "death": "dig.basalt"
+        },
+        "pitch": [0.7, 0.9],
+        "volume": 3
       }
     }
   }

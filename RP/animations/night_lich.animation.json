@@ -2433,6 +2433,7 @@
       }
     },
     "animation.bomd_night_lich.summon_fireball": {
+      "loop": "hold_on_last_frame",
       "animation_length": 3.76,
       "bones": {
         "root": {
@@ -4064,6 +4065,7 @@
       }
     },
     "animation.bomd_night_lich.summon_missiles": {
+      "loop": "hold_on_last_frame",
       "animation_length": 3.8,
       "bones": {
         "root": {
@@ -5212,6 +5214,7 @@
       }
     },
     "animation.bomd_night_lich.summon_minions": {
+      "loop": "hold_on_last_frame",
       "animation_length": 3.12,
       "bones": {
         "root": {
@@ -7465,6 +7468,7 @@
       }
     },
     "animation.bomd_night_lich.teleport": {
+      "loop": "hold_on_last_frame",
       "animation_length": 1.44,
       "bones": {
         "root": {
@@ -8059,6 +8063,7 @@
       }
     },
     "animation.bomd_night_lich.unteleport": {
+      "loop": "hold_on_last_frame",
       "animation_length": 1.04,
       "bones": {
         "root": {
@@ -8260,6 +8265,7 @@
       }
     },
     "animation.bomd_night_lich.rage_mode": {
+      "loop": "hold_on_last_frame",
       "animation_length": 2.44,
       "bones": {
         "root": {

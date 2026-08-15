@@ -3,19 +3,31 @@
   "texture_name": "atlas.items",
   "texture_data": {
     "bomd:soul_star": {
-      "textures": [
-        "textures/bomd/night_lich/items/soul_star"
-      ]
+      "textures": ["textures/bomd/night_lich/items/soul_star"]
     },
     "bomd:ancient_anima": {
-      "textures": [
-        "textures/bomd/night_lich/items/ancient_anima"
-      ]
+      "textures": ["textures/bomd/night_lich/items/ancient_anima"]
     },
     "bomd:blazing_eye": {
-      "textures": [
-        "textures/bomd/nether_gauntlet/items/blazing_eye"
-      ]
+      "textures": ["textures/bomd/nether_gauntlet/items/blazing_eye"]
+    },
+    "bomd:void_thorn": {
+      "textures": ["textures/bomd/items/void_thorn"]
+    },
+    "bomd:crystal_fruit": {
+      "textures": ["textures/bomd/items/crystal_fruit"]
+    },
+    "bomd:charged_ender_pearl": {
+      "textures": ["textures/bomd/items/charged_ender_pearl"]
+    },
+    "bomd:earthdive_spear": {
+      "textures": ["textures/bomd/items/earthdive_spear"]
+    },
+    "bomd:brimstone_nectar": {
+      "textures": ["textures/bomd/items/brimstone_nectar"]
+    },
+    "bomd:obsidian_heart": {
+      "textures": ["textures/bomd/items/obsidian_heart"]
     }
   }
 }

@@ -1,0 +1,45 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:void_spore_ball",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "spawn_category": "misc"
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "void_projectile",
+          "bomd_void_blossom_projectile"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.55,
+        "height": 0.55
+      },
+      "minecraft:physics": {},
+      "minecraft:projectile": {
+        "angle_offset": 0,
+        "gravity": 0,
+        "power": 1,
+        "inertia": 1,
+        "liquid_inertia": 0.8,
+        "uncertainty_base": 0,
+        "uncertainty_multiplier": 0,
+        "isolated_physics": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "all",
+          "deals_damage": "no"
+        }
+      }
+    }
+  }
+}

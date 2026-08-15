@@ -2,7 +2,6 @@
 
 import { FROST_PARTICLE } from "../core/config.js";
 import { attempt, isEntityUsable } from "../core/safe.js";
-import { clampEntityLocation, isLocationLoaded, isLocationWithinWorld } from "../core/world_bounds.js";
 
 export function setAnimationState(boss, value) {
   if (!isEntityUsable(boss)) {
@@ -17,10 +16,26 @@ export function setAnimationState(boss, value) {
     () => boss.setProperty("bomd:casting", value !== 0),
     "set casting compatibility property"
   );
+  const glow = value === 5 ? 0 : value === 7 ? 3 : value === 0 ? 1 : 2;
+  attempt(
+    () => boss.setProperty("bomd:lich_glow", glow),
+    "set Night Lich attack glow"
+  );
 }
 
 export function spawnParticle(dimension, particleId, location) {
-  if (!isLocationWithinWorld(dimension, location, 0.01) || !isLocationLoaded(dimension, location, 0.01)) return;
+  try {
+    const height = dimension.heightRange;
+    if (
+      location.y < height.min ||
+      location.y >= height.max ||
+      !dimension.isChunkLoaded(location)
+    ) {
+      return;
+    }
+  } catch {
+    return;
+  }
   attempt(
     () => dimension.spawnParticle(particleId, location),
     `spawn particle ${particleId}`
@@ -61,31 +76,10 @@ export function spawnRing(dimension, center, radius, count = 28) {
 }
 
 export function playSound(dimension, soundId, location, volume = 1, pitch = 1) {
-  if (
-    !isLocationWithinWorld(dimension, location, 0.01) ||
-    !isLocationLoaded(dimension, location, 0.01)
-  ) {
-    return undefined;
-  }
-  // @minecraft/server 2.9.0-beta returns a SoundInstance here. Existing
-  // callers may ignore it; attacks that need cancellation can retain it.
-  return attempt(
-    () =>
-      dimension.playSound(
-        soundId,
-        clampEntityLocation(dimension, location),
-        { volume, pitch }
-      ),
+  attempt(
+    () => dimension.playSound(soundId, location, { volume, pitch }),
     `play sound ${soundId}`
   );
-}
-
-export function stopSoundInstance(instance, label = "stop sound instance") {
-  if (!instance || typeof instance.stop !== "function") return false;
-  return attempt(() => {
-    instance.stop();
-    return true;
-  }, label) === true;
 }
 
 export function announceNearby(boss, text, radius = 48) {

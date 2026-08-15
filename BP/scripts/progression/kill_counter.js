@@ -7,7 +7,6 @@ import {
   SOUL_STAR_ITEM,
   SOUL_STAR_KILL_INTERVAL
 } from "../core/config.js";
-import { translate } from "../core/i18n.js";
 import { attempt, isEntityUsable } from "../core/safe.js";
 import { playSound, spawnBurst } from "../visuals/frost.js";
 
@@ -80,7 +79,9 @@ export function registerSoulKillCounter() {
     if (count === 1) {
       attempt(
         () =>
-          killingPlayer.sendMessage(translate("bomd.message.soul_counter.first")),
+          killingPlayer.sendMessage(
+            "§b[BOMD] §fYou gathered the first of 50 valid souls. Zombies, skeletons, drowned, husks, phantoms, strays, Wither creatures, and their variants count toward a Soul Star."
+          ),
         "explain soul star progression"
       );
     }
@@ -91,8 +92,8 @@ export function registerSoulKillCounter() {
           () =>
             killingPlayer.onScreenDisplay.setActionBar(
               remaining === 1
-                ? translate("bomd.message.soul_counter.one_remaining")
-                : translate("bomd.message.soul_counter.progress", [progress, SOUL_STAR_KILL_INTERVAL])
+                ? "§bThe souls converge... §f1 valid creature remaining"
+                : `§bSoul Star progress §7— §f${progress}/${SOUL_STAR_KILL_INTERVAL}`
             ),
           "show soul star progress"
         );
@@ -100,33 +101,28 @@ export function registerSoulKillCounter() {
       return;
     }
 
-    const corpseLocation = attempt(
-      () => ({ ...event.deadEntity.location }),
-      "read soul reward corpse location"
-    );
-    const rewardDimension = attempt(
-      () => event.deadEntity.dimension,
-      "read soul reward corpse dimension"
-    ) ?? killingPlayer.dimension;
-    const location = corpseLocation
-      ? { x: corpseLocation.x, y: corpseLocation.y + 0.6, z: corpseLocation.z }
-      : { x: killingPlayer.location.x, y: killingPlayer.location.y + 0.6, z: killingPlayer.location.z };
+    const location = {
+      x: event.deadEntity.location.x,
+      y: event.deadEntity.location.y + 0.6,
+      z: event.deadEntity.location.z
+    };
     attempt(
-      () => rewardDimension.spawnItem(
-        new ItemStack(SOUL_STAR_ITEM, 1),
-        location
-      ),
+      () =>
+        event.deadEntity.dimension.spawnItem(
+          new ItemStack(SOUL_STAR_ITEM, 1),
+          location
+        ),
       "drop soul star"
     );
     spawnBurst(
-      rewardDimension,
+      event.deadEntity.dimension,
       location,
       28,
       1.1,
       SOUL_FLAME_PARTICLE
     );
     playSound(
-      rewardDimension,
+      event.deadEntity.dimension,
       "bomd.night_lich.soul_star",
       location,
       1,
@@ -134,7 +130,9 @@ export function registerSoulKillCounter() {
     );
     attempt(
       () =>
-        killingPlayer.sendMessage(translate("bomd.message.soul_counter.reward", [count])),
+        killingPlayer.sendMessage(
+          `§b[BOMD] §fYour ${count}th valid kill released a Soul Star. Use it in the air to locate a tower, or place four on its altars.`
+        ),
       "announce soul star"
     );
   });

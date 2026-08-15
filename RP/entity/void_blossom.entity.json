@@ -1,0 +1,42 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:void_blossom",
+      "materials": {
+        "default": "entity_alphatest",
+        "emissive": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/bomd/void_blossom/void_blossom"
+      },
+      "geometry": {
+        "default": "geometry.bomd_void_blossom"
+      },
+      "animations": {
+        "idle": "animation.bomd_void_blossom.idle",
+        "spike": "animation.bomd_void_blossom.spike",
+        "spike_wave": "animation.bomd_void_blossom.spike_wave",
+        "spore": "animation.bomd_void_blossom.spore",
+        "leaf_blade": "animation.bomd_void_blossom.leaf_blade",
+        "blossom": "animation.bomd_void_blossom.blossom",
+        "spawn": "animation.bomd_void_blossom.spawn",
+        "death": "animation.bomd_void_blossom.death",
+        "action_controller": "controller.animation.bomd_void_blossom.action"
+      },
+      "scripts": {
+        "animate": [
+          "action_controller"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.bomd_void_blossom",
+        "controller.render.bomd_void_blossom_glow"
+      ],
+      "spawn_egg": {
+        "base_color": "#2B1844",
+        "overlay_color": "#B763D8"
+      }
+    }
+  }
+}

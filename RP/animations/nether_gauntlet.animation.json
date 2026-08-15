@@ -2,6 +2,7 @@
   "format_version": "1.10.0",
   "animations": {
     "animation.bomd_nether_gauntlet.punch_start": {
+      "loop": "hold_on_last_frame",
       "animation_length": 0.52,
       "bones": {
         "allZ": {
@@ -903,6 +904,7 @@
       }
     },
     "animation.bomd_nether_gauntlet.swirl_punch": {
+      "loop": "hold_on_last_frame",
       "animation_length": 3.16,
       "bones": {
         "allZ": {
@@ -2778,6 +2780,7 @@
       }
     },
     "animation.bomd_nether_gauntlet.laser_eye_start": {
+      "loop": "hold_on_last_frame",
       "animation_length": 1.28,
       "bones": {
         "tophand": {
@@ -4758,6 +4761,7 @@
       }
     },
     "animation.bomd_nether_gauntlet.laser_eye_stop": {
+      "loop": "hold_on_last_frame",
       "animation_length": 0.56,
       "bones": {
         "tophand": {
@@ -6361,6 +6365,7 @@
       }
     },
     "animation.bomd_nether_gauntlet.punch_stop": {
+      "loop": "hold_on_last_frame",
       "animation_length": 0.52,
       "bones": {
         "allZ": {
@@ -10964,6 +10969,7 @@
       }
     },
     "animation.bomd_nether_gauntlet.cast": {
+      "loop": "hold_on_last_frame",
       "animation_length": 2.08,
       "bones": {
         "allX": {

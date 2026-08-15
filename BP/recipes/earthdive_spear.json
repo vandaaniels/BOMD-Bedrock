@@ -1,0 +1,36 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "bomd:earthdive_spear"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "H",
+      "V",
+      "S"
+    ],
+    "key": {
+      "H": {
+        "item": "bomd:obsidian_heart"
+      },
+      "V": {
+        "item": "bomd:void_thorn"
+      },
+      "S": {
+        "item": "minecraft:stick"
+      }
+    },
+    "unlock": [
+      {
+        "item": "bomd:obsidian_heart"
+      }
+    ],
+    "result": {
+      "item": "bomd:earthdive_spear",
+      "count": 1
+    }
+  }
+}

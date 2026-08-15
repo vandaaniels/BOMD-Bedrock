@@ -1,0 +1,60 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "bomd:earthdive_spear",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.bomd:earthdive_spear.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "bomd:earthdive_spear"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:damage": 9,
+      "minecraft:durability": {
+        "max_durability": 250
+      },
+      "minecraft:enchantable": {
+        "value": 1,
+        "slot": "melee_spear"
+      },
+      "minecraft:use_modifiers": {
+        "use_duration": 0.5,
+        "movement_modifier": 0.65
+      },
+      "minecraft:kinetic_weapon": {
+        "delay": 10,
+        "reach": {
+          "min": 0.0,
+          "max": 3.0
+        },
+        "creative_reach": {
+          "min": 0.0,
+          "max": 3.0
+        },
+        "hitbox_margin": 0.0,
+        "damage_multiplier": 0.0,
+        "damage_conditions": {
+          "max_duration": 1,
+          "min_relative_speed": 1000.0
+        }
+      },
+      "minecraft:cooldown": {
+        "category": "bomd_earthdive",
+        "duration": 1
+      },
+      "bomd:earthdive_spear": {}
+    }
+  }
+}

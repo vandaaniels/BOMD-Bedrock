@@ -1,0 +1,20 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:void_spike_fx",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/bomd/void_blossom/void_blossom_spike"
+      },
+      "geometry": {
+        "default": "geometry.bomd_void_spike_fx"
+      },
+      "render_controllers": [
+        "controller.render.bomd_void_spike_fx"
+      ]
+    }
+  }
+}

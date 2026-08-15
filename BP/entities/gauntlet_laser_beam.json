@@ -1,0 +1,62 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:gauntlet_laser_beam",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "spawn_category": "misc",
+      "properties": {
+        "bomd:beam_length": {
+          "type": "float",
+          "range": [0.1, 30.0],
+          "default": 1.0,
+          "client_sync": true
+        },
+        "bomd:beam_active": {
+          "type": "bool",
+          "default": false,
+          "client_sync": true
+        }
+      }
+    },
+    "component_groups": {
+      "bomd:expired": {
+        "minecraft:instant_despawn": {}
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["bomd_visual", "bomd_gauntlet_laser_beam", "inanimate"]
+      },
+      "minecraft:collision_box": {
+        "width": 0.01,
+        "height": 0.01
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:timer": {
+        "looping": false,
+        "time": 20,
+        "time_down_event": {
+          "event": "bomd:expire",
+          "target": "self"
+        }
+      }
+    },
+    "events": {
+      "bomd:expire": {
+        "add": {
+          "component_groups": ["bomd:expired"]
+        }
+      }
+    }
+  }
+}

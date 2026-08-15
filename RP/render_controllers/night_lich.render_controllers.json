@@ -25,6 +25,26 @@
         "offset": [0, 0],
         "scale": [1, 1]
       }
+    },
+    "controller.render.bomd_night_lich_glow": {
+      "geometry": "Geometry.default",
+      "materials": [
+        { "*": "Material.fullbright" }
+      ],
+      "textures": ["Texture.default"],
+      "part_visibility": [
+        { "*": false },
+        { "leftEye": true },
+        { "rightEye": true },
+        { "crown_crystals": true },
+        { "crystal": true }
+      ],
+      "color": {
+        "r": 0.42,
+        "g": 0.94,
+        "b": 1.0,
+        "a": "q.property('bomd:lich_glow') == 0 ? 0.0 : 0.08 + q.property('bomd:lich_glow') * 0.18 + math.abs(math.sin(q.life_time * 720.0)) * 0.14"
+      }
     }
   }
 }

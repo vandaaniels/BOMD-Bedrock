@@ -1,0 +1,11 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:texture_set": {
+    "color": "gauntlet_emissive",
+    "metalness_emissive_roughness": [
+      0,
+      255,
+      170
+    ]
+  }
+}

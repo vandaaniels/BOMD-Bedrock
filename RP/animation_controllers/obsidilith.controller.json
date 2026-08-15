@@ -1,0 +1,137 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.bomd_obsidilith.action": {
+      "initial_state": "summon",
+      "states": {
+        "summon": {
+          "animations": ["summon"],
+          "blend_transition": 0.04,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "idle": {
+          "animations": ["idle"],
+          "blend_transition": 0.18,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "summon": "q.property('bomd:obsidilith_animation') == 7" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" }
+          ]
+        },
+        "burst": {
+          "animations": ["burst"],
+          "blend_transition": 0.1,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "wave": {
+          "animations": ["wave"],
+          "blend_transition": 0.1,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "spikes": {
+          "animations": ["spikes"],
+          "blend_transition": 0.08,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "anvil": {
+          "animations": ["anvil"],
+          "blend_transition": 0.03,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "pillars": {
+          "animations": ["pillars"],
+          "blend_transition": 0.12,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "shielded": "q.property('bomd:obsidilith_animation') == 8" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "shielded": {
+          "animations": ["shielded"],
+          "blend_transition": 0.14,
+          "transitions": [
+            { "death": "q.property('bomd:obsidilith_animation') == 6" },
+            { "pillars": "q.property('bomd:obsidilith_animation') == 5" },
+            { "anvil": "q.property('bomd:obsidilith_animation') == 4" },
+            { "spikes": "q.property('bomd:obsidilith_animation') == 3" },
+            { "wave": "q.property('bomd:obsidilith_animation') == 2" },
+            { "burst": "q.property('bomd:obsidilith_animation') == 1" },
+            { "idle": "q.property('bomd:obsidilith_animation') == 0" }
+          ]
+        },
+        "death": {
+          "animations": ["death"],
+          "blend_transition": 0.04
+        }
+      }
+    },
+    "controller.animation.bomd_obsidilith.hurt": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "transitions": [
+            { "hit": "q.property('bomd:obsidilith_hurt')" }
+          ]
+        },
+        "hit": {
+          "animations": ["hurt"],
+          "blend_transition": 0.02,
+          "transitions": [
+            { "default": "!q.property('bomd:obsidilith_hurt')" }
+          ]
+        }
+      }
+    }
+  }
+}

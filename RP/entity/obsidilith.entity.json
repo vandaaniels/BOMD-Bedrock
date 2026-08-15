@@ -1,0 +1,47 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:obsidilith",
+      "materials": {
+        "default": "entity_alphatest",
+        "emissive": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/bomd/obsidilith/obsidilith",
+        "armor": "textures/bomd/obsidilith/obsidilith_armor",
+        "rune_idle": "textures/bomd/obsidilith/runes/rune_idle",
+        "rune_burst": "textures/bomd/obsidilith/runes/rune_burst",
+        "rune_wave": "textures/bomd/obsidilith/runes/rune_wave",
+        "rune_spike": "textures/bomd/obsidilith/runes/rune_spike",
+        "rune_anvil": "textures/bomd/obsidilith/runes/rune_anvil",
+        "rune_pillar": "textures/bomd/obsidilith/runes/rune_pillar"
+      },
+      "geometry": { "default": "geometry.bomd_obsidilith" },
+      "animations": {
+        "idle": "animation.bomd_obsidilith.idle",
+        "burst": "animation.bomd_obsidilith.burst",
+        "wave": "animation.bomd_obsidilith.wave",
+        "spikes": "animation.bomd_obsidilith.spikes",
+        "anvil": "animation.bomd_obsidilith.anvil",
+        "pillars": "animation.bomd_obsidilith.pillars",
+        "shielded": "animation.bomd_obsidilith.shielded",
+        "summon": "animation.bomd_obsidilith.summon",
+        "death": "animation.bomd_obsidilith.death",
+        "hurt": "animation.bomd_obsidilith.hurt",
+        "action_controller": "controller.animation.bomd_obsidilith.action",
+        "hurt_controller": "controller.animation.bomd_obsidilith.hurt"
+      },
+      "scripts": {
+        "animate": ["action_controller", "hurt_controller"]
+      },
+      "render_controllers": [
+        "controller.render.bomd_obsidilith",
+        "controller.render.bomd_obsidilith_runes_idle",
+        "controller.render.bomd_obsidilith_runes_emissive",
+        "controller.render.bomd_obsidilith_armor"
+      ],
+      "spawn_egg": { "base_color": "#111116", "overlay_color": "#7B36D6" }
+    }
+  }
+}

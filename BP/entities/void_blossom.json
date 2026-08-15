@@ -1,0 +1,350 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:void_blossom",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "properties": {
+        "bomd:void_animation_state": {
+          "type": "int",
+          "range": [
+            0,
+            7
+          ],
+          "default": 6,
+          "client_sync": true
+        },
+        "bomd:void_stage": {
+          "type": "int",
+          "range": [
+            0,
+            4
+          ],
+          "default": 4,
+          "client_sync": true
+        },
+        "bomd:void_hurt": {
+          "type": "bool",
+          "default": false,
+          "client_sync": true
+        },
+        "bomd:void_hitbox_state": {
+          "type": "int",
+          "range": [
+            0,
+            6
+          ],
+          "default": 0,
+          "client_sync": true
+        },
+        "bomd:void_energy": {
+          "type": "int",
+          "range": [0, 3],
+          "default": 1,
+          "client_sync": true
+        },
+        "bomd:void_death_tick": {
+          "type": "int",
+          "range": [
+            0,
+            70
+          ],
+          "default": 0,
+          "client_sync": true
+        }
+      }
+    },
+    "component_groups": {
+      "bomd:scale_1": {
+        "minecraft:health": {
+          "value": 350,
+          "max": 350
+        }
+      },
+      "bomd:scale_2": {
+        "minecraft:health": {
+          "value": 543,
+          "max": 543
+        }
+      },
+      "bomd:scale_3": {
+        "minecraft:health": {
+          "value": 735,
+          "max": 735
+        }
+      },
+      "bomd:scale_4": {
+        "minecraft:health": {
+          "value": 928,
+          "max": 928
+        }
+      },
+      "bomd:scale_5": {
+        "minecraft:health": {
+          "value": 1120,
+          "max": 1120
+        }
+      },
+      "bomd:scale_6": {
+        "minecraft:health": {
+          "value": 1313,
+          "max": 1313
+        }
+      },
+      "bomd:scale_7": {
+        "minecraft:health": {
+          "value": 1505,
+          "max": 1505
+        }
+      },
+      "bomd:scale_8": {
+        "minecraft:health": {
+          "value": 1698,
+          "max": 1698
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "void_blossom",
+          "bomd_void_blossom",
+          "monster",
+          "mob"
+        ]
+      },
+      "minecraft:health": {
+        "value": 350,
+        "max": 350
+      },
+      "minecraft:boss": {
+        "name": "Void Blossom",
+        "hud_range": 40,
+        "should_darken_sky": false
+      },
+      "minecraft:collision_box": {
+        "width": 2.0,
+        "height": 8.0
+      },
+      "minecraft:physics": {
+        "has_gravity": true,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1
+      },
+      "minecraft:persistent": {},
+      "minecraft:experience_reward": {
+        "on_death": 1000
+      }
+    },
+    "events": {
+      "bomd:scale_1": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_1"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_2": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_2"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_3": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_3"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_4": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_4"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_5": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_5"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_6": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_6"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_7": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_7"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_8": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_8"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

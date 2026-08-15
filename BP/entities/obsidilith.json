@@ -1,0 +1,32 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:obsidilith",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "spawn_category": "monster",
+      "properties": {
+        "bomd:obsidilith_animation": { "type": "int", "range": [0, 8], "default": 7, "client_sync": true },
+        "bomd:obsidilith_shielded": { "type": "bool", "default": false, "client_sync": true },
+        "bomd:obsidilith_energy": { "type": "bool", "default": false, "client_sync": true },
+        "bomd:obsidilith_hurt": { "type": "bool", "default": false, "client_sync": true },
+        "bomd:obsidilith_death_tick": { "type": "int", "range": [0, 80], "default": 0, "client_sync": true }
+      }
+    },
+    "components": {
+      "minecraft:type_family": { "family": ["obsidilith", "bomd_obsidilith", "monster", "mob"] },
+      "minecraft:health": { "value": 300, "max": 300 },
+      "minecraft:attack": { "damage": 16 },
+      "minecraft:boss": { "name": "Obsidilith", "hud_range": 48, "should_darken_sky": true },
+      "minecraft:collision_box": { "width": 2.8, "height": 4.6 },
+      "minecraft:physics": { "has_gravity": false, "has_collision": true },
+      "minecraft:pushable": { "is_pushable": false, "is_pushable_by_piston": false },
+      "minecraft:knockback_resistance": { "value": 1.0 },
+      "minecraft:fire_immune": {},
+      "minecraft:persistent": {},
+      "minecraft:experience_reward": { "on_death": 0 }
+    }
+  }
+}

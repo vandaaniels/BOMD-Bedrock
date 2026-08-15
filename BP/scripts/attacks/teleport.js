@@ -1,59 +1,45 @@
 // @ts-check
 
-import { TELEPORT_PARTICLE } from "../core/config.js";
 import {
-  debugEnabled,
-  debugPoint,
-  recordCombatEvent
-} from "../core/combat_debug.js";
-import { lichInLineOfSight } from "../core/lich_visibility.js";
-import { attempt, isEntityUsable } from "../core/safe.js";
+  ANIMATION_TICKS,
+  ANIMATION_STATE,
+  LEASH_RADIUS,
+  TELEPORT_PARTICLE
+} from "../core/config.js";
+import { attempt, isEntityUsable, schedule } from "../core/safe.js";
 import {
-  dimensionHeightRange,
-  isLocationLoaded
-} from "../core/world_bounds.js";
-import { normalize } from "../core/vector.js";
+  distance,
+  horizontalDistance,
+  normalize,
+  subtract
+} from "../core/vector.js";
 import {
   playSound,
-  spawnParticle,
-  stopSoundInstance
+  setAnimationState,
+  spawnBurst
 } from "../visuals/frost.js";
 import { contextActive } from "./shared.js";
 
-const MIN_DISTANCE = 20;
-const MAX_DISTANCE = 35;
-const ATTEMPTS = 100;
-
-
-function spawnTeleportParticle(boss) {
-  if (!isEntityUsable(boss)) return;
-  const center = boss.getHeadLocation();
-  spawnParticle(boss.dimension, TELEPORT_PARTICLE, {
-    x: center.x + (Math.random() * 2 - 1) * 3,
-    y: center.y + (Math.random() * 2 - 1) * 3,
-    z: center.z + (Math.random() * 2 - 1) * 3
-  });
-}
-
-function randomDirection() {
-  let result;
-  do {
-    result = {
-      x: Math.random() * 2 - 1,
-      y: Math.random() * 2 - 1,
-      z: Math.random() * 2 - 1
-    };
-  } while (
-    Math.abs(result.x) +
-      Math.abs(result.y) +
-      Math.abs(result.z) <
-    0.001
+function hasClearRay(dimension, location, target) {
+  const endpoint = target.getHeadLocation();
+  const delta = subtract(endpoint, location);
+  const range = distance(location, endpoint);
+  if (range <= 1) {
+    return true;
+  }
+  const hit = attempt(
+    () =>
+      dimension.getBlockFromRay(location, normalize(delta), {
+        maxDistance: Math.max(0.1, range - 0.75),
+        includeLiquidBlocks: false,
+        includePassableBlocks: false
+      }),
+    "validate lich teleport sightline"
   );
-  return normalize(result);
+  return !hit;
 }
 
 function hasFullLichSpace(dimension, location) {
-  if (!isLocationLoaded(dimension, location, 3.1)) return false;
   const halfWidth = 0.9;
   const minX = Math.floor(location.x - halfWidth);
   const maxX = Math.floor(location.x + halfWidth);
@@ -66,8 +52,9 @@ function hasFullLichSpace(dimension, location) {
     for (let y = minY; y <= maxY; y += 1) {
       for (let x = minX; x <= maxX; x += 1) {
         for (let z = minZ; z <= maxZ; z += 1) {
-          const block = dimension.getBlock({ x, y, z });
-          if (!block?.isAir && !block?.isLiquid) return false;
+          if (!dimension.getBlock({ x, y, z })?.isAir) {
+            return false;
+          }
         }
       }
     }
@@ -77,153 +64,148 @@ function hasFullLichSpace(dimension, location) {
   return true;
 }
 
-/**
- * Equivalent to MOTION_BLOCKING_NO_LEAVES for the loaded target column. The
- * prior implementation started only 32 blocks above the player and could miss
- * the actual surface when the arena had tall terrain above it.
- */
-function topPositionNearTarget(target) {
-  const dimension = target.dimension;
-  const range = dimensionHeightRange(dimension);
-  const x = Math.floor(target.location.x);
-  const z = Math.floor(target.location.z);
-  for (let y = range.max - 2; y >= range.min; y -= 1) {
-    const block = attempt(
-      () => dimension.getBlock({ x, y, z }),
-      "find Night Lich teleport fallback height"
+function tryRangedTeleport(context, requireSightline) {
+  const { boss, target, home } = context;
+  for (let index = 0; index < 28; index += 1) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 20 + Math.random() * 15;
+    const candidate = {
+      x: target.location.x + Math.cos(angle) * radius,
+      y: target.location.y + 4 + Math.random() * 4,
+      z: target.location.z + Math.sin(angle) * radius
+    };
+    if (
+      horizontalDistance(candidate, home) > LEASH_RADIUS - 2 ||
+      !hasFullLichSpace(boss.dimension, candidate) ||
+      (requireSightline &&
+        !hasClearRay(boss.dimension, candidate, target))
+    ) {
+      continue;
+    }
+
+    const teleported = attempt(
+      () =>
+        boss.tryTeleport(candidate, {
+          checkForBlocks: true,
+          facingLocation: target.location
+        }),
+      "try lich teleport"
     );
-    if (block && !block.isAir && !block.isLiquid) {
-      return { x: x + 0.5, y: y + 1, z: z + 0.5 };
+    if (teleported) {
+      return true;
     }
   }
-  return { ...target.location };
+  return false;
 }
 
-function candidateAround(center) {
-  const radius =
-    MIN_DISTANCE + Math.random() * (MAX_DISTANCE - MIN_DISTANCE);
-  const direction = randomDirection();
-  return {
-    x: center.x + direction.x * radius,
-    y: center.y + direction.y * radius,
-    z: center.z + direction.z * radius
-  };
-}
-
-function selectCandidate(context, center, phase) {
-  const { boss, target } = context;
-  for (let index = 0; index < ATTEMPTS; index += 1) {
-    const candidate = candidateAround(center);
-    if (debugEnabled("teleport")) {
-      debugPoint(
-        boss.dimension,
-        candidate,
-        "minecraft:basic_portal_particle"
-      );
-    }
-    if (!hasFullLichSpace(boss.dimension, candidate)) continue;
-
-    recordCombatEvent("lich_teleport_destination", {
-      bossId: boss.id,
-      targetId: target.id,
-      candidate,
-      phase,
-      attempt: index + 1
-    });
-    return candidate;
-  }
-  return undefined;
-}
-
-/**
- * Java chooses and locks the destination when performTeleport starts, not at
- * tick 40. Its primary predicate checks the Lich's current visibility/facing
- * relationship with the target; it does not raycast from each candidate.
- */
 function findDestination(context) {
-  const { boss, target } = context;
-  const primaryEligible = lichInLineOfSight(boss, target);
-  if (primaryEligible) {
-    const primary = selectCandidate(
-      context,
-      { ...target.location },
-      "primary"
-    );
-    if (primary) {
-      return { location: primary, phase: "primary", primaryEligible };
-    }
+  const { boss, target, home } = context;
+  if (
+    tryRangedTeleport(context, true) ||
+    tryRangedTeleport(context, false)
+  ) {
+    return true;
   }
-
-  const fallback = selectCandidate(
-    context,
-    topPositionNearTarget(target),
-    "heightmap_fallback"
+  attempt(
+    () =>
+      boss.teleport(home, { facingLocation: target.location }),
+    "fallback lich teleport"
   );
-  return fallback
-    ? {
-        location: fallback,
-        phase: "heightmap_fallback",
-        primaryEligible
-      }
-    : { location: undefined, phase: "failed", primaryEligible };
+  return false;
 }
 
 export const teleport = {
   id: "teleport",
   duration: 80,
   execute(context) {
-    if (!contextActive(context)) return;
-    context.attackData.targetId = context.target.id;
-    context.attackData.destination = findDestination(context);
-    context.attackData.prepareSound = undefined;
-  },
-  pulse(context, pulse) {
-    const { boss, target, attackData } = context;
-    if (!contextActive(context, false)) return;
-    if (pulse === "prepare") {
-      boss.triggerEvent("bomd:begin_teleport");
-      attackData.prepareSound = playSound(
-        boss.dimension,
-        "bomd.night_lich.teleport_prepare",
-        boss.location,
-        3,
-        1
+    const { boss, target } = context;
+    if (!contextActive(context)) {
+      return;
+    }
+
+    setAnimationState(boss, ANIMATION_STATE.teleport);
+    const origin = { ...boss.location };
+
+    schedule(
+      10,
+      () => {
+        if (contextActive(context)) {
+          boss.triggerEvent("bomd:begin_teleport");
+          playSound(
+            boss.dimension,
+            "bomd.night_lich.teleport_prepare",
+            origin,
+            3,
+            1
+          );
+        }
+      },
+      "teleport preparation sound"
+    );
+
+    for (let tick = 15; tick <= 24; tick += 1) {
+      schedule(
+        tick,
+        () => {
+          if (contextActive(context)) {
+            spawnBurst(
+              boss.dimension,
+              origin,
+              14,
+              0.7 + (tick - 15) * 0.08,
+              TELEPORT_PARTICLE
+            );
+          }
+        },
+        "teleport telegraph"
       );
-      return;
     }
-    if (pulse === "particle") {
-      spawnTeleportParticle(boss);
-      return;
-    }
-    if (pulse === "vanish") {
-      return;
-    }
-    if (pulse === "move") {
-      stopSoundInstance(attackData.prepareSound, "stop Night Lich teleport preparation sound");
-      const destination = attackData.destination ?? { location: undefined, phase: "failed", primaryEligible: false };
-      let success = false;
-      if (destination.location && isEntityUsable(boss)) {
-        success = attempt(() => {
-          const options = isEntityUsable(target) ? { facingLocation: target.location } : undefined;
-          boss.teleport(destination.location, options);
-          return true;
-        }, "perform locked Night Lich teleport") === true;
-      }
-      if (isEntityUsable(boss)) boss.triggerEvent("bomd:end_teleport");
-      if (!contextActive(context, false)) return;
-      playSound(boss.dimension, "mob.endermen.portal", boss.location, 2, 0.85);
-      recordCombatEvent(success ? "lich_teleport" : "lich_teleport_failed", {
-        bossId: boss.id,
-        targetId: attackData.targetId,
-        destination: destination.location,
-        phase: destination.phase,
-        primaryEligible: destination.primaryEligible
-      });
-      return;
-    }
-    if (pulse === "complete") {
-      stopSoundInstance(attackData.prepareSound, "finish Night Lich teleport preparation sound");
-      if (isEntityUsable(boss)) boss.triggerEvent("bomd:end_teleport");
-    }
+
+    schedule(
+      ANIMATION_TICKS.teleportVanish,
+      () => {
+        if (contextActive(context, false)) {
+          setAnimationState(boss, ANIMATION_STATE.teleporting);
+        }
+      },
+      "teleport vanish"
+    );
+    schedule(
+      ANIMATION_TICKS.teleportMove,
+      () => {
+        if (isEntityUsable(boss)) {
+          boss.triggerEvent("bomd:end_teleport");
+        }
+        if (!contextActive(context)) {
+          return;
+        }
+        findDestination(context);
+        setAnimationState(boss, ANIMATION_STATE.unteleport);
+        spawnBurst(
+          boss.dimension,
+          boss.location,
+          28,
+          1.6,
+          TELEPORT_PARTICLE
+        );
+        playSound(
+          boss.dimension,
+          "mob.endermen.portal",
+          boss.location,
+          2,
+          0.85
+        );
+      },
+      "lich teleport"
+    );
+    schedule(
+      ANIMATION_TICKS.teleportReturn,
+      () => {
+        if (contextActive(context, false)) {
+          setAnimationState(boss, ANIMATION_STATE.idle);
+        }
+      },
+      "teleport animation follow-through"
+    );
   }
 };

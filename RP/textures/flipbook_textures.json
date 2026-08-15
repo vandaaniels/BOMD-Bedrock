@@ -4,5 +4,17 @@
     "atlas_tile": "bomd_altar_lit",
     "ticks_per_frame": 2,
     "blend_frames": false
+  },
+  {
+    "flipbook_texture": "textures/bomd/blocks/monolith",
+    "atlas_tile": "bomd_monolith",
+    "ticks_per_frame": 2,
+    "blend_frames": true
+  },
+  {
+    "flipbook_texture": "textures/bomd/obsidilith/blocks/obsidilith_rune",
+    "atlas_tile": "bomd_obsidilith_rune",
+    "ticks_per_frame": 8,
+    "blend_frames": true
   }
 ]

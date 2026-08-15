@@ -1,0 +1,42 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_void_spike_fx": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "frame_0": "q.life_time >= 0.000 && q.life_time < 0.065"
+        },
+        {
+          "frame_1": "q.life_time >= 0.065 && q.life_time < 0.130"
+        },
+        {
+          "frame_2": "q.life_time >= 0.130 && q.life_time < 0.195"
+        },
+        {
+          "frame_3": "q.life_time >= 0.195 && q.life_time < 0.260"
+        },
+        {
+          "frame_4": "q.life_time >= 0.260 && q.life_time < 0.325"
+        },
+        {
+          "frame_5": "q.life_time >= 0.325 && q.life_time < 0.390"
+        },
+        {
+          "frame_6": "q.life_time >= 0.390 && q.life_time < 0.455"
+        },
+        {
+          "frame_7": "q.life_time >= 0.455 && q.life_time < 99.000"
+        }
+      ]
+    }
+  }
+}

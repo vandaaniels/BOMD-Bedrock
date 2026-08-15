@@ -1,0 +1,11 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:texture_set": {
+    "color": "void_blossom_healer",
+    "metalness_emissive_roughness": [
+      0,
+      225,
+      175
+    ]
+  }
+}

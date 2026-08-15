@@ -1,0 +1,200 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "bomd:void_blossom_hitbox",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "spawn_category": "misc"
+    },
+    "component_groups": {
+      "bomd:root_55": {
+        "minecraft:collision_box": {
+          "width": 1.5,
+          "height": 5.5
+        }
+      },
+      "bomd:neck_long": {
+        "minecraft:collision_box": {
+          "width": 3.5,
+          "height": 1.0
+        }
+      },
+      "bomd:flower_4": {
+        "minecraft:collision_box": {
+          "width": 4.0,
+          "height": 4.0
+        }
+      },
+      "bomd:small": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 1.0
+        }
+      },
+      "bomd:neck_1": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 1.0
+        }
+      },
+      "bomd:root_9": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 9.0
+        }
+      },
+      "bomd:flower_flat_4": {
+        "minecraft:collision_box": {
+          "width": 4.0,
+          "height": 1.0
+        }
+      },
+      "bomd:root_65": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 6.5
+        }
+      },
+      "bomd:root_4": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 4.0
+        }
+      },
+      "bomd:root_375": {
+        "minecraft:collision_box": {
+          "width": 1.5,
+          "height": 3.75
+        }
+      },
+      "bomd:root_8": {
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 8.0
+        }
+      },
+      "bomd:flower_spore": {
+        "minecraft:collision_box": {
+          "width": 3.0,
+          "height": 3.0
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "void_blossom_part",
+          "bomd_void_blossom_hitbox"
+        ]
+      },
+      "minecraft:health": {
+        "value": 2048,
+        "max": 2048
+      },
+      "minecraft:collision_box": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1
+      },
+      "minecraft:persistent": {}
+    },
+    "events": {
+      "bomd:root_55": {
+        "add": {
+          "component_groups": [
+            "bomd:root_55"
+          ]
+        }
+      },
+      "bomd:neck_long": {
+        "add": {
+          "component_groups": [
+            "bomd:neck_long"
+          ]
+        }
+      },
+      "bomd:flower_4": {
+        "add": {
+          "component_groups": [
+            "bomd:flower_4"
+          ]
+        }
+      },
+      "bomd:small": {
+        "add": {
+          "component_groups": [
+            "bomd:small"
+          ]
+        }
+      },
+      "bomd:neck_1": {
+        "add": {
+          "component_groups": [
+            "bomd:neck_1"
+          ]
+        }
+      },
+      "bomd:root_9": {
+        "add": {
+          "component_groups": [
+            "bomd:root_9"
+          ]
+        }
+      },
+      "bomd:flower_flat_4": {
+        "add": {
+          "component_groups": [
+            "bomd:flower_flat_4"
+          ]
+        }
+      },
+      "bomd:root_65": {
+        "add": {
+          "component_groups": [
+            "bomd:root_65"
+          ]
+        }
+      },
+      "bomd:root_4": {
+        "add": {
+          "component_groups": [
+            "bomd:root_4"
+          ]
+        }
+      },
+      "bomd:root_375": {
+        "add": {
+          "component_groups": [
+            "bomd:root_375"
+          ]
+        }
+      },
+      "bomd:root_8": {
+        "add": {
+          "component_groups": [
+            "bomd:root_8"
+          ]
+        }
+      },
+      "bomd:flower_spore": {
+        "add": {
+          "component_groups": [
+            "bomd:flower_spore"
+          ]
+        }
+      }
+    }
+  }
+}

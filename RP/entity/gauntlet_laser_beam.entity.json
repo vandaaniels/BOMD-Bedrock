@@ -1,0 +1,26 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:gauntlet_laser_beam",
+      "materials": {
+        "default": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/bomd/nether_gauntlet/gauntlet_beam"
+      },
+      "geometry": {
+        "default": "geometry.bomd_gauntlet_laser_beam"
+      },
+      "animations": {
+        "beam": "animation.bomd_gauntlet_laser_beam.scale"
+      },
+      "scripts": {
+        "animate": ["beam"]
+      },
+      "render_controllers": [
+        "controller.render.bomd_gauntlet_laser_beam"
+      ]
+    }
+  }
+}

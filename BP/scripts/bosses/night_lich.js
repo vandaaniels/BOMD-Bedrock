@@ -1,6 +1,6 @@
 // @ts-check
 
-import { GameMode, system, world } from "@minecraft/server";
+import { system, world } from "@minecraft/server";
 import { comet } from "../attacks/comet.js";
 import { magicMissileVolley } from "../attacks/magic_missile_volley.js";
 import { rageComets } from "../attacks/rage_comets.js";
@@ -11,22 +11,27 @@ import { teleport } from "../attacks/teleport.js";
 import {
   ANIMATION_STATE,
   ATTACK_HISTORY_PROPERTY,
+  BALANCE_VERSION_PROPERTY,
   BOSS_TYPE,
   COMBAT_RADIUS,
   FROST_PARTICLE,
   HOME_X_PROPERTY,
   HOME_Y_PROPERTY,
   HOME_Z_PROPERTY,
+  LEASH_RADIUS,
   MANAGER_INTERVAL_TICKS,
   PHASE_RUNES_PARTICLE,
   PREVIOUS_ATTACK_PROPERTY,
   RAGE_QUEUE_PROPERTY,
+  RESET_DELAY_TICKS,
+  SCALED_PLAYERS_PROPERTY,
   SOUL_FLAME_PARTICLE
 } from "../core/config.js";
 import {
   appendAttackHistory,
   cappedHealingLimit,
   calculateTeleportWeight,
+  clampPlayerCount,
   healthPhase,
   highestRememberedAttacker,
   regularAttackWeights,
@@ -34,10 +39,10 @@ import {
   shouldCappedHeal,
   UPSTREAM_IDLE_HEAL_PER_TICK
 } from "../core/lich_logic.js";
-import { bossRecoveryTicks, scaleDamageToBoss } from "../core/difficulty.js";
-import { debugMovement, recordBossSample, recordCombatEvent } from "../core/combat_debug.js";
-import { createMovementState, tickUpstreamFlight } from "../core/validated_flight.js";
-import { setLichServerAttack, setLichTimelineHandler } from "../core/hybrid_timeline.js";
+import {
+  balanceRevision,
+  effectiveEncounterPlayers
+} from "../core/balance.js";
 import {
   attempt,
   isEntityUsable,
@@ -45,14 +50,15 @@ import {
 } from "../core/safe.js";
 import {
   distance,
+  horizontalDistance,
   normalize,
   scale,
   subtract
 } from "../core/vector.js";
 import {
-  hasDirectLichLineOfSight,
-  lichInLineOfSight
-} from "../core/lich_visibility.js";
+  isBossCombatPlayer,
+  markBossAggressor
+} from "../core/combat_target.js";
 import {
   playSound,
   setAnimationState,
@@ -60,11 +66,8 @@ import {
   spawnParticle
 } from "../visuals/frost.js";
 import { cleanupEncounterEntities } from "./encounter_cleanup.js";
-import { beginRememberedBossDeath, rememberBossSnapshot } from "./death_events.js";
 
 const stateByBossId = new Map();
-const trackedBosses = new Map();
-let lastDiscoveryTick = -999;
 const RAGE_SEQUENCE = Object.freeze([
   rageComets,
   rageMissiles,
@@ -73,7 +76,12 @@ const RAGE_SEQUENCE = Object.freeze([
 const RAGE_ATTACKS_BY_ID = new Map(
   RAGE_SEQUENCE.map((attack) => [attack.id, attack])
 );
-const BALANCE_VERSION = 6;
+const END_TICK_CALLBACK_ATTACKS = new Set([
+  summonPhantoms.id,
+  rageMinions.id
+]);
+const BALANCE_VERSION = 5;
+const RECOVERY_SCAN_TICKS = 200;
 let started = false;
 
 function readNumberProperty(entity, propertyId) {
@@ -126,15 +134,86 @@ function nearbyPlayers(entity) {
       location: entity.location,
       maxDistance: COMBAT_RADIUS
     })
-    .filter((player) => {
-      const mode = player.getGameMode();
-      return mode === GameMode.Survival || mode === GameMode.Adventure;
-    });
+    .filter(isBossCombatPlayer);
+}
+
+function hasClearRay(boss, target, requireTargetFacing = false) {
+  const origin = boss.getHeadLocation();
+  const endpoint = target.getHeadLocation();
+  const delta = subtract(endpoint, origin);
+  const rayDistance = distance(origin, endpoint);
+  if (rayDistance <= 1) {
+    return true;
+  }
+
+  const blocked = attempt(
+    () =>
+      boss.dimension.getBlockFromRay(origin, normalize(delta), {
+        maxDistance: Math.max(0.1, rayDistance - 0.75),
+        includeLiquidBlocks: false,
+        includePassableBlocks: false
+      }),
+    "trace Night Lich line of sight"
+  );
+  if (blocked) {
+    return false;
+  }
+  if (!requireTargetFacing) {
+    return true;
+  }
+
+  const view = target.getViewDirection();
+  const directionToLich = normalize(
+    subtract(origin, target.getHeadLocation())
+  );
+  return (
+    view.x * directionToLich.x +
+      view.y * directionToLich.y +
+      view.z * directionToLich.z >
+    0
+  );
+}
+
+function applyLichScale(boss, requestedCount) {
+  const playerCount = effectiveEncounterPlayers(
+    clampPlayerCount(requestedCount)
+  );
+  const storedCount = readNumberProperty(boss, SCALED_PLAYERS_PROPERTY);
+  const storedVersion = readNumberProperty(boss, BALANCE_VERSION_PROPERTY);
+  const activeRevision = balanceRevision(BALANCE_VERSION);
+  if (storedCount === playerCount && storedVersion === activeRevision) {
+    return playerCount;
+  }
+  const health = boss.getComponent("minecraft:health");
+  const ratio = health
+    ? health.currentValue / Math.max(1, health.effectiveMax)
+    : 1;
+  boss.triggerEvent(`bomd:scale_${playerCount}`);
+  boss.setDynamicProperty(SCALED_PLAYERS_PROPERTY, playerCount);
+  boss.setDynamicProperty(BALANCE_VERSION_PROPERTY, activeRevision);
+  system.runTimeout(() => {
+    if (!isEntityUsable(boss)) {
+      return;
+    }
+    const scaled = boss.getComponent("minecraft:health");
+    if (!scaled) {
+      return;
+    }
+    scaled.setCurrentValue(
+      Math.max(1, Math.min(scaled.effectiveMax, scaled.effectiveMax * ratio))
+    );
+  }, 1);
+  return playerCount;
 }
 
 function initializeBoss(boss, now) {
   const home = readHome(boss);
-  const playerCount = 1;
+  const initialPlayers = nearbyPlayers(boss);
+  const storedPlayers = readNumberProperty(boss, SCALED_PLAYERS_PROPERTY);
+  const playerCount = applyLichScale(
+    boss,
+    storedPlayers ?? initialPlayers.length
+  );
 
   const health = boss.getComponent("minecraft:health");
   const calculatedPhase = health
@@ -170,19 +249,14 @@ function initializeBoss(boss, now) {
 
   boss.nameTag = "Night Lich";
   boss.setProperty("bomd:phase", phase);
-  boss.setProperty("bomd:head_yaw", 0);
-  boss.setProperty("bomd:head_pitch", 0);
   boss.triggerEvent("bomd:end_teleport");
-  setLichServerAttack(boss, "idle");
   setAnimationState(boss, ANIMATION_STATE.idle);
 
   const state = {
     home,
-    movement: createMovementState(),
+    playerCount,
     attackHistory,
     currentAttack: /** @type {string | undefined} */ (undefined),
-    attackData: {},
-    attackContext: undefined,
     attackEndTick: now,
     nextAttackTick: now + 80,
     emptySinceTick: /** @type {number | undefined} */ (undefined),
@@ -205,7 +279,6 @@ function initializeBoss(boss, now) {
   };
 
   stateByBossId.set(boss.id, state);
-  trackedBosses.set(boss.id, boss);
   return state;
 }
 
@@ -234,39 +307,9 @@ function currentTarget(boss, players, state) {
   return nearest;
 }
 
-
-function setHeadTracking(boss, target) {
-  if (!isEntityUsable(boss)) return;
-  if (!isEntityUsable(target)) {
-    attempt(() => boss.setProperty("bomd:head_yaw", 0), "neutral Night Lich head yaw");
-    attempt(() => boss.setProperty("bomd:head_pitch", 0), "neutral Night Lich head pitch");
-    return;
-  }
-
-  const forward = boss.getViewDirection();
-  const origin = boss.getHeadLocation();
-  const endpoint = target.getHeadLocation();
-  const dx = endpoint.x - origin.x;
-  const dy = endpoint.y - origin.y;
-  const dz = endpoint.z - origin.z;
-  const horizontalDistanceToTarget = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
-  const forwardLength = Math.max(0.001, Math.sqrt(forward.x * forward.x + forward.z * forward.z));
-  const fx = forward.x / forwardLength;
-  const fz = forward.z / forwardLength;
-  const tx = dx / horizontalDistanceToTarget;
-  const tz = dz / horizontalDistanceToTarget;
-  const dot = Math.max(-1, Math.min(1, fx * tx + fz * tz));
-  const cross = fz * tx - fx * tz;
-  const yaw = Math.max(-55, Math.min(55, Math.atan2(cross, dot) * 180 / Math.PI));
-  const pitch = Math.max(-35, Math.min(35, Math.atan2(dy, horizontalDistanceToTarget) * 180 / Math.PI));
-
-  attempt(() => boss.setProperty("bomd:head_yaw", yaw), "track Night Lich head yaw");
-  attempt(() => boss.setProperty("bomd:head_pitch", pitch), "track Night Lich head pitch");
-}
-
 function maybeSwitchTarget(boss, players, state, now) {
   const visiblePlayers = players.filter((player) =>
-    hasDirectLichLineOfSight(boss, player)
+    hasClearRay(boss, player)
   );
   const attackerId = highestRememberedAttacker(
     state.damageMemory,
@@ -309,7 +352,7 @@ function distanceTraveled(positionHistory) {
 function selectRegularAttack(boss, target, state) {
   const targetDistance = distance(boss.location, target.location);
   const teleportWeight = calculateTeleportWeight({
-    inLineOfSight: lichInLineOfSight(boss, target),
+    inLineOfSight: hasClearRay(boss, target, true),
     distanceTraveled: distanceTraveled(state.positionHistory),
     targetDistance
   });
@@ -328,7 +371,6 @@ function selectRegularAttack(boss, target, state) {
     { attack: teleport, weight: weights.teleport }
   ]);
 }
-
 
 function saveRageQueue(boss, state) {
   writeStringArrayProperty(
@@ -368,20 +410,13 @@ function beginAttack(boss, target, state, attack, now) {
   state.castSerial += 1;
   const serial = state.castSerial;
   state.currentAttack = attack.id;
-  state.attackData = {};
-  state.attackEndTick = now + attack.duration + 20;
-  recordCombatEvent("lich_attack_start", {
-    bossId: boss.id,
-    targetId: target.id,
-    attack: attack.id,
-    phase: state.phase
-  });
+  state.attackEndTick = now + attack.duration;
   const context = {
     boss,
     target,
     phase: state.phase,
+    playerCount: state.playerCount,
     home: state.home,
-    attackData: state.attackData,
     isCurrent() {
       return (
         isEntityUsable(boss) &&
@@ -390,68 +425,79 @@ function beginAttack(boss, target, state, attack, now) {
       );
     }
   };
-  state.attackContext = context;
 
   const executed = runSafely(
     () => attack.execute(context),
-    `prepare Night Lich attack ${attack.id}`
+    `start Night Lich attack ${attack.id}`
   );
-  if (!executed || !setLichServerAttack(boss, attack.id)) {
+  if (!executed) {
     cancelCurrentAttack(boss, state);
     state.nextAttackTick = now + 20;
     return false;
   }
   if (!attack.id.startsWith("rage_")) {
-    state.attackHistory = appendAttackHistory(state.attackHistory, attack.id);
-    writeStringArrayProperty(boss, ATTACK_HISTORY_PROPERTY, state.attackHistory);
+    state.attackHistory = appendAttackHistory(
+      state.attackHistory,
+      attack.id
+    );
+    writeStringArrayProperty(
+      boss,
+      ATTACK_HISTORY_PROPERTY,
+      state.attackHistory
+    );
     boss.setDynamicProperty(PREVIOUS_ATTACK_PROPERTY, attack.id);
   }
-  state.nextAttackTick = now + attack.duration + bossRecoveryTicks();
+  state.nextAttackTick = now + attack.duration;
   return true;
 }
 
 function steerBoss(boss, target, state, now) {
-  // Java runs movement and attack goals together. The upstream selector keeps
-  // its prior direction and changes course gradually instead of snapping into
-  // a deterministic Bedrock orbit. Movement therefore continues while
-  // casting, including the teleport wind-up.
-  const combatTarget = {
-    x: target.location.x,
-    y: target.location.y + 1.1,
-    z: target.location.z
-  };
-  tickUpstreamFlight(
-    boss,
-    combatTarget,
-    state.movement,
-    {
-      reactionDistance: 4,
-      minRange: 15,
-      maxRange: 30,
-      flyingSpeed: 5,
-      speedScale: 0.17,
-      response: 0.055,
-      maximumImpulse: 0.11,
-      mass: 120,
-      bounds: { width: 1.8, height: 3.0 }
+  if (state.currentAttack === "teleport") {
+    return;
+  }
+
+  if (now >= state.nextStrafeDecisionTick) {
+    if (Math.random() < 0.5) {
+      state.strafeDirection *= -1;
     }
+    state.nextStrafeDecisionTick =
+      now + 40 + Math.floor(Math.random() * 61);
+  }
+
+  const dx = target.location.x - boss.location.x;
+  const dz = target.location.z - boss.location.z;
+  const horizontal = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
+  const toward = normalize({ x: dx, y: 0, z: dz });
+  let desiredVelocity;
+
+  if (horizontal < 15) {
+    desiredVelocity = scale(toward, -0.32);
+  } else if (horizontal > 30) {
+    desiredVelocity = scale(toward, 0.32);
+  } else {
+    desiredVelocity = {
+      x: -toward.z * 0.2 * state.strafeDirection,
+      y: 0,
+      z: toward.x * 0.2 * state.strafeDirection
+    };
+  }
+
+  const desiredY = target.location.y + 6;
+  desiredVelocity.y = Math.max(
+    -0.16,
+    Math.min(0.16, (desiredY - boss.location.y) * 0.04)
   );
 
-  // The 1.3/1.4 safety leash teleported the Lich to its spawn point as soon as
-  // it crossed 24 vertical blocks from home. Java has no such combat reset. A
-  // weak vertical correction keeps Bedrock's randomized flight near the target
-  // without visibly snapping or cancelling an attack.
-  const verticalDelta = combatTarget.y - (boss.location.y + 1.5);
-  if (Math.abs(verticalDelta) > 20) {
-    const verticalImpulse = Math.max(
-      -0.075,
-      Math.min(0.075, verticalDelta * 0.006)
-    );
-    attempt(
-      () => boss.applyImpulse({ x: 0, y: verticalImpulse, z: 0 }),
-      "correct Night Lich combat altitude"
-    );
-  }
+  const velocity =
+    attempt(() => boss.getVelocity(), "read Night Lich velocity") ??
+    { x: 0, y: 0, z: 0 };
+  const response = 0.24;
+  const impulse = {
+    x: (desiredVelocity.x - velocity.x) * response,
+    y: (desiredVelocity.y - velocity.y) * response,
+    z: (desiredVelocity.z - velocity.z) * response
+  };
+  attempt(() => boss.applyImpulse(impulse), "steer Night Lich");
 }
 
 function emitCastingEyeGlow(boss, state, now) {
@@ -530,44 +576,44 @@ function healTowardCurrentStage(boss, state) {
   }
 }
 
-function cancelCurrentAttack(boss, state, reason = "cancelled") {
+function cancelCurrentAttack(boss, state) {
   if (!state.currentAttack) {
-    setLichServerAttack(boss, "idle");
     return;
   }
-  const endedAttack = state.currentAttack;
   state.castSerial += 1;
   state.currentAttack = undefined;
-  state.attackData = {};
-  state.attackContext = undefined;
   state.attackEndTick = 0;
   boss.triggerEvent("bomd:end_teleport");
-  setLichServerAttack(boss, "idle");
   setAnimationState(boss, ANIMATION_STATE.idle);
-  recordCombatEvent("lich_attack_end", {
-    bossId: boss.id,
-    attack: endedAttack,
-    reason
-  });
 }
 
-function returnTowardHome(boss, state) {
-  const delta = subtract(state.home, boss.location);
-  const homeDistance = distance(boss.location, state.home);
-  if (homeDistance <= 2) {
-    const velocity = attempt(() => boss.getVelocity(), "read idle Night Lich velocity") ?? { x: 0, y: 0, z: 0 };
-    attempt(
-      () => boss.applyImpulse(scale(velocity, -0.08)),
-      "dampen idle Night Lich velocity"
-    );
-    return;
-  }
-  const direction = normalize(delta);
-  const currentVelocity = attempt(() => boss.getVelocity(), "read returning Night Lich velocity") ?? { x: 0, y: 0, z: 0 };
-  const desiredVelocity = scale(direction, 2.4);
-  const acceleration = scale(subtract(desiredVelocity, currentVelocity), 1 / 120);
-  attempt(() => boss.applyImpulse(acceleration), "return Night Lich toward home");
-  debugMovement(boss.dimension, boss.location, direction, 5);
+function resetEncounter(boss, state, now) {
+  cancelCurrentAttack(boss, state);
+  state.rageQueue.length = 0;
+  saveRageQueue(boss, state);
+  const health = boss.getComponent("minecraft:health");
+  health?.resetToMaxValue();
+  boss.teleport(state.home);
+  boss.setProperty("bomd:phase", 1);
+  boss.setDynamicProperty(PREVIOUS_ATTACK_PROPERTY, undefined);
+  boss.setDynamicProperty(ATTACK_HISTORY_PROPERTY, undefined);
+  setAnimationState(boss, ANIMATION_STATE.idle);
+  cleanupEncounterEntities(
+    boss.dimension,
+    state.home,
+    COMBAT_RADIUS + 40
+  );
+  state.phase = 1;
+  state.attackHistory = [];
+  state.nextAttackTick = now + 80;
+  state.emptySinceTick = now;
+  state.engaged = false;
+  state.targetId = undefined;
+  state.forcedTeleportTargetId = undefined;
+  state.damageMemory = [];
+  state.positionHistory = [{ ...state.home }];
+  state.nextStrafeDecisionTick =
+    now + 40 + Math.floor(Math.random() * 61);
 }
 
 function tickBoss(boss, now) {
@@ -576,13 +622,9 @@ function tickBoss(boss, now) {
     return;
   }
 
-
   const state = stateByBossId.get(boss.id) ?? initializeBoss(boss, now);
-  rememberBossSnapshot(boss);
   const health = boss.getComponent("minecraft:health");
-  if (!health) return;
-  if (health.currentValue <= 0) {
-    beginRememberedBossDeath(boss, "Night Lich manager");
+  if (!health || health.currentValue <= 0) {
     return;
   }
 
@@ -591,34 +633,35 @@ function tickBoss(boss, now) {
     state,
     healthPhase(health.currentValue, health.effectiveMax)
   );
+  attempt(() => world.setTimeOfDay(16000), "hold eternal midnight");
   state.positionHistory.push({ ...boss.location });
-  if (state.positionHistory.length > 10) state.positionHistory.shift();
+  state.positionHistory = state.positionHistory.slice(-10);
 
   const players = nearbyPlayers(boss);
   const hasTarget = players.length > 0;
   if (shouldCappedHeal(hasTarget)) {
-    // Java preserves the current rage stage and heals only up to that stage cap.
-    // The encounter is not reset merely because players leave for a few seconds.
+    // CappedHeal in the Java mod only runs while the mob has no target.
     healTowardCurrentStage(boss, state);
-    const firstEmptyTick = state.emptySinceTick === undefined;
+    attempt(() => boss.clearVelocity(), "stop idle Night Lich drift");
     state.emptySinceTick ??= now;
     state.targetId = undefined;
-    setHeadTracking(boss, undefined);
     cancelCurrentAttack(boss, state);
-    if (firstEmptyTick) state.nextAttackTick = now + 80;
-    returnTowardHome(boss, state);
-    recordBossSample("night_lich", boss, {
-      phase: state.phase,
-      attack: undefined,
-      targetId: undefined,
-      idle: true
-    });
+    state.nextAttackTick = now + 80;
+    if (
+      state.engaged &&
+      now - state.emptySinceTick >= RESET_DELAY_TICKS
+    ) {
+      resetEncounter(boss, state, now);
+    }
     return;
   }
 
   const firstEngagement = !state.engaged;
   state.engaged = true;
   state.emptySinceTick = undefined;
+  if (now % 20 === 0) {
+    state.playerCount = applyLichScale(boss, players.length);
+  }
   if (firstEngagement) {
     state.nextAttackTick = Math.max(state.nextAttackTick, now + 80);
   }
@@ -650,9 +693,17 @@ function tickBoss(boss, now) {
     });
   }
 
-  if (state.currentAttack && now >= state.attackEndTick) {
-    cancelCurrentAttack(boss, state, "timeline_watchdog");
-    state.nextAttackTick = Math.max(state.nextAttackTick, now + 10);
+  if (
+    state.currentAttack &&
+    now >= state.attackEndTick
+  ) {
+    if (END_TICK_CALLBACK_ATTACKS.has(state.currentAttack)) {
+      state.nextAttackTick = Math.max(
+        state.nextAttackTick,
+        now + MANAGER_INTERVAL_TICKS
+      );
+    }
+    state.currentAttack = undefined;
   }
 
   attempt(
@@ -664,27 +715,20 @@ function tickBoss(boss, now) {
       }),
     "face Night Lich target"
   );
-  setHeadTracking(boss, target);
   emitCastingEyeGlow(boss, state, now);
 
-  // Do not teleport an engaged Lich back to its spawn/home position. The Java
-  // boss has no combat leash teleport; its 15-30 block movement range returns
-  // it toward the player. Home is used only while the encounter is idle.
+  if (
+    horizontalDistance(boss.location, state.home) > LEASH_RADIUS ||
+    Math.abs(boss.location.y - state.home.y) > 24
+  ) {
+    cancelCurrentAttack(boss, state);
+    boss.teleport(state.home, { facingLocation: target.location });
+    spawnBurst(boss.dimension, state.home, 26, 1.5);
+    state.nextAttackTick = now + 30;
+    return;
+  }
+
   steerBoss(boss, target, state, now);
-  recordBossSample("night_lich", boss, {
-    phase: state.phase,
-    attack: state.currentAttack,
-    animationState: attempt(
-      () => boss.getProperty("bomd:animation_state"),
-      "read Night Lich comparison animation state"
-    ),
-    targetId: target.id,
-    targetDistance: distance(boss.location, target.location),
-    javaLineOfSight: lichInLineOfSight(boss, target),
-    blockedTicks: state.movement.blockedTicks,
-    stagnantTicks: state.movement.stagnantTicks
-  });
-  if (state.currentAttack) return;
   if (now < state.nextAttackTick) {
     return;
   }
@@ -700,35 +744,6 @@ function tickBoss(boss, now) {
   if (attack) {
     beginAttack(boss, target, state, attack, now);
   }
-}
-
-function handleLichTimelineEvent(entity, message) {
-  if (!isEntityUsable(entity) || entity.typeId !== BOSS_TYPE) return;
-  const separator = message.indexOf(":");
-  const attackId = separator >= 0 ? message.slice(0, separator) : message;
-  const pulse = separator >= 0 ? message.slice(separator + 1) : "";
-  const state = stateByBossId.get(entity.id);
-  if (!state || state.currentAttack !== attackId || !state.attackContext) {
-    recordCombatEvent("lich_timeline_stale", {
-      bossId: entity.id,
-      message,
-      currentAttack: state?.currentAttack
-    });
-    return;
-  }
-  const attack = [comet, magicMissileVolley, summonPhantoms, teleport, rageComets, rageMissiles, rageMinions]
-    .find((candidate) => candidate.id === attackId);
-  if (pulse === "complete") {
-    if (attack?.pulse) {
-      runSafely(() => attack.pulse(state.attackContext, pulse), `Night Lich completion pulse ${message}`);
-    }
-    cancelCurrentAttack(entity, state, "behavior_timeline_complete");
-    return;
-  }
-  if (attack?.pulse) {
-    runSafely(() => attack.pulse(state.attackContext, pulse), `Night Lich behavior pulse ${message}`);
-  }
-  recordCombatEvent("lich_timeline_pulse", { bossId: entity.id, attack: attackId, pulse });
 }
 
 function damagingPlayer(damageSource) {
@@ -749,11 +764,15 @@ function damagingPlayer(damageSource) {
 
 function rememberBossDamage(event) {
   const boss = event.hurtEntity;
-  if (boss.typeId !== BOSS_TYPE || event.damage <= 0) {
+  if (boss.typeId !== BOSS_TYPE) {
     return;
   }
   const player = damagingPlayer(event.damageSource);
-  if (!isEntityUsable(player)) {
+  if (!isBossCombatPlayer(player)) {
+    return;
+  }
+  markBossAggressor(player);
+  if (event.damage <= 4) {
     return;
   }
 
@@ -765,42 +784,43 @@ function rememberBossDamage(event) {
     damage: event.damage,
     tick: system.currentTick
   });
-  if (state.targetId === undefined) {
+  if (!state.engaged || state.targetId === undefined) {
     state.forcedTeleportTargetId = player.id;
     state.nextAttackTick = system.currentTick;
   }
 }
 
-function discoverBosses(now) {
-  lastDiscoveryTick = now;
+function recoveryScan() {
+  const seenIds = new Set();
   for (const dimensionId of ["overworld", "nether", "the_end"]) {
-    attempt(() => {
-      for (const boss of world.getDimension(dimensionId).getEntities({ type: BOSS_TYPE })) {
-        trackedBosses.set(boss.id, boss);
-        if (!stateByBossId.has(boss.id)) initializeBoss(boss, now);
+    const bosses = attempt(
+      () => world.getDimension(dimensionId).getEntities({ type: BOSS_TYPE }),
+      `recover Night Liches in ${dimensionId}`
+    ) ?? [];
+    for (const boss of bosses) {
+      seenIds.add(boss.id);
+      if (!stateByBossId.has(boss.id)) {
+        initializeBoss(boss, system.currentTick);
       }
-    }, `discover ${dimensionId} Night Liches`);
+    }
+  }
+  for (const bossId of stateByBossId.keys()) {
+    if (!seenIds.has(bossId)) {
+      stateByBossId.delete(bossId);
+    }
   }
 }
 
 function managerTick() {
   const now = system.currentTick;
-  if (now - lastDiscoveryTick >= 40) {
-    discoverBosses(now);
-  }
-  let activeLichExists = false;
-  for (const [bossId, boss] of trackedBosses) {
-    if (!isEntityUsable(boss)) {
-      trackedBosses.delete(bossId);
-      stateByBossId.delete(bossId);
-      continue;
+  for (const bossId of stateByBossId.keys()) {
+    const boss = attempt(
+      () => world.getEntity(bossId),
+      "resolve tracked Night Lich"
+    );
+    if (isEntityUsable(boss)) {
+      attempt(() => tickBoss(boss, now), `tick Night Lich ${bossId}`);
     }
-    const health = attempt(() => boss.getComponent("minecraft:health"), "read Night Lich global night health");
-    if (health && health.currentValue > 0) activeLichExists = true;
-    attempt(() => tickBoss(boss, now), `tick Night Lich ${boss.id}`);
-  }
-  if (activeLichExists) {
-    attempt(() => world.setTimeOfDay(16000), "hold global eternal midnight");
   }
 }
 
@@ -809,25 +829,23 @@ export function startNightLichManager() {
     return;
   }
   started = true;
-  setLichTimelineHandler(handleLichTimelineEvent);
-  world.afterEvents.entitySpawn.subscribe((event) => {
-    if (event.entity.typeId !== BOSS_TYPE) return;
-    trackedBosses.set(event.entity.id, event.entity);
-    system.run(() => {
-      if (isEntityUsable(event.entity) && !stateByBossId.has(event.entity.id)) {
-        initializeBoss(event.entity, system.currentTick);
-      }
-    });
-  });
-  world.beforeEvents.entityHurt.subscribe((event) => {
-    if (event.hurtEntity.typeId !== BOSS_TYPE || event.damage <= 0) return;
-    event.damage = scaleDamageToBoss(event.damage);
-  });
   world.afterEvents.entityHurt.subscribe((event) => {
     attempt(
       () => rememberBossDamage(event),
       "remember Night Lich damage"
     );
   });
+  world.afterEvents.entitySpawn.subscribe((event) => {
+    if (event.entity.typeId !== BOSS_TYPE) {
+      return;
+    }
+    system.run(() => {
+      if (isEntityUsable(event.entity)) {
+        initializeBoss(event.entity, system.currentTick);
+      }
+    });
+  });
+  recoveryScan();
   system.runInterval(managerTick, MANAGER_INTERVAL_TICKS);
+  system.runInterval(recoveryScan, RECOVERY_SCAN_TICKS);
 }

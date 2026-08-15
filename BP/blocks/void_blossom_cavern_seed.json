@@ -1,0 +1,48 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:void_blossom_cavern_seed",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:void_blossom_cavern_seed.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 999999
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 999999
+      },
+      "minecraft:geometry": {
+        "identifier": "minecraft:geometry.full_block"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_void_seed",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:item_visual": {
+        "geometry": "minecraft:geometry.full_block",
+        "material_instances": {
+          "*": {
+            "texture": "bomd_void_seed",
+            "render_method": "opaque"
+          }
+        }
+      },
+      "minecraft:light_emission": 0,
+      "minecraft:light_dampening": 15,
+      "minecraft:tick": {
+        "looping": true,
+        "interval_range": [
+          20,
+          20
+        ]
+      },
+      "bomd:void_cavern_seed": {}
+    }
+  }
+}

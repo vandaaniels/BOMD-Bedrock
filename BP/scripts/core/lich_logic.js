@@ -1,12 +1,23 @@
 // @ts-check
 
-import { appendDamageMemory, highestDamageAttacker } from "./damage_memory.js";
-
 export const UPSTREAM_BASE_HEALTH = 300;
 export const UPSTREAM_IDLE_HEAL_PER_TICK = 0.2;
 export const REGULAR_PHANTOM_COUNT = 1;
 export const RAGE_PHANTOM_COUNT = 9;
 export const ATTACK_HISTORY_LIMIT = 4;
+export const DAMAGE_MEMORY_LIMIT = 5;
+export const DAMAGE_MEMORY_TICKS = 20 * 30;
+
+export function clampPlayerCount(count) {
+  return Math.max(1, Math.min(8, Math.floor(count)));
+}
+
+export function scaledHealth(playerCount) {
+  const players = clampPlayerCount(playerCount);
+  return Math.round(
+    UPSTREAM_BASE_HEALTH * (1 + 0.55 * (players - 1))
+  );
+}
 
 export function healthPhase(currentValue, maximumValue) {
   const maximum = Math.max(1, maximumValue);
@@ -63,11 +74,42 @@ export function calculateTeleportWeight({
 }
 
 export function rememberDamage(history, hit) {
-  return appendDamageMemory(history, hit, 4);
+  if (hit.damage <= 4) {
+    return history;
+  }
+  return [...history, hit].slice(-DAMAGE_MEMORY_LIMIT);
 }
 
-export function highestRememberedAttacker(history, candidateIds, currentTick) {
-  return highestDamageAttacker(history, candidateIds, currentTick);
+export function highestRememberedAttacker(
+  history,
+  candidateIds,
+  currentTick
+) {
+  const candidates = new Set(candidateIds);
+  const totals = new Map();
+
+  for (const hit of history) {
+    if (
+      currentTick - hit.tick > DAMAGE_MEMORY_TICKS ||
+      !candidates.has(hit.playerId)
+    ) {
+      continue;
+    }
+    totals.set(
+      hit.playerId,
+      (totals.get(hit.playerId) ?? 0) + hit.damage
+    );
+  }
+
+  let winner;
+  let winnerDamage = Number.NEGATIVE_INFINITY;
+  for (const [playerId, damage] of totals) {
+    if (damage > winnerDamage) {
+      winner = playerId;
+      winnerDamage = damage;
+    }
+  }
+  return winner;
 }
 
 export function rageMinionDelays() {

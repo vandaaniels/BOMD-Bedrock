@@ -1,0 +1,137 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.bomd_void_blossom.action": {
+      "initial_state": "spawn",
+      "states": {
+        "spawn": {
+          "animations": [
+            "spawn"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 6"
+            }
+          ],
+          "blend_transition": 0.12,
+          "blend_via_shortest_path": true
+        },
+        "idle": {
+          "animations": [
+            "idle"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "spike": "q.property('bomd:void_animation_state') == 1"
+            },
+            {
+              "spike_wave": "q.property('bomd:void_animation_state') == 2"
+            },
+            {
+              "spore": "q.property('bomd:void_animation_state') == 3"
+            },
+            {
+              "blade": "q.property('bomd:void_animation_state') == 4"
+            },
+            {
+              "blossom": "q.property('bomd:void_animation_state') == 5"
+            },
+            {
+              "spawn": "q.property('bomd:void_animation_state') == 6"
+            }
+          ],
+          "blend_transition": 0.2,
+          "blend_via_shortest_path": true
+        },
+        "spike": {
+          "animations": [
+            "spike"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 1"
+            }
+          ],
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
+        },
+        "spike_wave": {
+          "animations": [
+            "spike_wave"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 2"
+            }
+          ],
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
+        },
+        "spore": {
+          "animations": [
+            "spore"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 3"
+            }
+          ],
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
+        },
+        "blade": {
+          "animations": [
+            "leaf_blade"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 4"
+            }
+          ],
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
+        },
+        "blossom": {
+          "animations": [
+            "blossom"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:void_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "idle": "q.property('bomd:void_animation_state') != 5"
+            }
+          ],
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
+        },
+        "death": {
+          "animations": [
+            "death"
+          ],
+          "blend_transition": 0.06,
+          "blend_via_shortest_path": true
+        }
+      }
+    }
+  }
+}

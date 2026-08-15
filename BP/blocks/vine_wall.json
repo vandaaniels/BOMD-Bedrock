@@ -1,0 +1,39 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bomd:vine_wall",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.bomd:vine_wall.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 4
+      },
+      "minecraft:geometry": {
+        "identifier": "geometry.bomd_vine_wall"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "bomd_vine_wall",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:item_visual": {
+        "geometry": "geometry.bomd_vine_wall",
+        "material_instances": {
+          "*": {
+            "texture": "bomd_vine_wall",
+            "render_method": "alpha_test"
+          }
+        }
+      },
+      "minecraft:light_dampening": 0
+    }
+  }
+}

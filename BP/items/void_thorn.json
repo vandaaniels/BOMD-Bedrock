@@ -1,0 +1,26 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "bomd:void_thorn",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.bomd:void_thorn.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "bomd:void_thorn"
+        }
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:rarity": "rare",
+      "minecraft:fire_resistant": {
+        "value": true
+      }
+    }
+  }
+}

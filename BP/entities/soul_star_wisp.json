@@ -1,5 +1,5 @@
 {
-  "format_version": "1.26.30",
+  "format_version": "1.26.0",
   "minecraft:entity": {
     "description": {
       "identifier": "bomd:soul_star_wisp",
@@ -10,9 +10,7 @@
     },
     "components": {
       "minecraft:type_family": {
-        "family": [
-          "soul_star_wisp"
-        ]
+        "family": ["soul_star_wisp", "bomd_soul_star_wisp"]
       },
       "minecraft:collision_box": {
         "width": 0.1,
@@ -22,18 +20,15 @@
         "has_gravity": false,
         "has_collision": false
       },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
       "minecraft:damage_sensor": {
         "triggers": {
           "cause": "all",
           "deals_damage": "no"
         }
-      },
-      "minecraft:pushable_by_entity": {
-        "presets": [
-          {
-            "push_mode": "none"
-          }
-        ]
       }
     }
   }

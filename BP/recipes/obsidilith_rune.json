@@ -1,0 +1,14 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:recipe_shaped": {
+    "description": { "identifier": "bomd:obsidilith_rune" },
+    "tags": ["crafting_table"],
+    "pattern": [" O ", "OHO", " O "],
+    "key": {
+      "O": { "item": "minecraft:obsidian" },
+      "H": { "item": "bomd:obsidian_heart" }
+    },
+    "unlock": [{ "item": "bomd:obsidian_heart" }],
+    "result": { "item": "bomd:obsidilith_rune", "count": 1 }
+  }
+}

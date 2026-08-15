@@ -1,36 +1,27 @@
 {
-  "format_version": "1.26.30",
+  "format_version": "1.26.0",
   "minecraft:block": {
     "description": {
       "identifier": "bomd:sealed_blackstone"
     },
     "components": {
       "minecraft:display_name": "tile.bomd:sealed_blackstone.name",
-      "minecraft:destructible_by_mining": false,
-      "minecraft:destructible_by_explosion": false,
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3600
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 3600000
+      },
       "minecraft:friction": 0.6,
-      "minecraft:light_dampening": 15,
+      "minecraft:map_color": "#201B1D",
       "minecraft:geometry": {
         "identifier": "minecraft:geometry.full_block"
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "bomd_sealed_blackstone",
+          "texture": "polished_blackstone_bricks",
           "render_method": "opaque"
         }
-      },
-      "minecraft:item_visual": {
-        "geometry": "minecraft:geometry.full_block",
-        "material_instances": {
-          "*": {
-            "texture": "bomd_sealed_blackstone",
-            "render_method": "opaque"
-          }
-        }
-      },
-      "minecraft:destruction_particles": {
-        "texture": "bomd_sealed_blackstone",
-        "particle_count": 80
       }
     }
   }

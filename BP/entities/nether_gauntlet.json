@@ -1,5 +1,5 @@
 {
-  "format_version": "1.26.30",
+  "format_version": "1.26.0",
   "minecraft:entity": {
     "description": {
       "identifier": "bomd:nether_gauntlet",
@@ -7,16 +7,16 @@
       "is_summonable": true,
       "is_experimental": false,
       "properties": {
-        "bomd:animation_state": {
+        "bomd:gauntlet_animation_state": {
           "type": "int",
           "range": [
             0,
             9
           ],
-          "default": 0,
+          "default": 8,
           "client_sync": true
         },
-        "bomd:visual_state": {
+        "bomd:gauntlet_energy": {
           "type": "int",
           "range": [
             0,
@@ -25,38 +25,100 @@
           "default": 0,
           "client_sync": true
         },
-        "bomd:eye_open": {
-          "type": "bool",
-          "default": true,
-          "client_sync": true
-        },
-        "bomd:server_attack": {
+        "bomd:gauntlet_hurt": {
           "type": "int",
           "range": [
             0,
-            4
+            1
           ],
           "default": 0,
-          "client_sync": false
+          "client_sync": true
+        },
+        "bomd:gauntlet_eye_open": {
+          "type": "bool",
+          "default": false,
+          "client_sync": true
+        },
+        "bomd:gauntlet_hand_closed": {
+          "type": "bool",
+          "default": false,
+          "client_sync": true
+        }
+      }
+    },
+    "component_groups": {
+      "bomd:open_hand": {
+        "minecraft:collision_box": {
+          "width": 2.0,
+          "height": 4.0
         }
       },
-      "animations": {
-        "server_combat": "controller.animation.bomd.gauntlet.server",
-        "server_punch": "animation.bomd.gauntlet.server.punch",
-        "server_swirl": "animation.bomd.gauntlet.server.swirl",
-        "server_laser": "animation.bomd.gauntlet.server.laser",
-        "server_blindness": "animation.bomd.gauntlet.server.blindness"
+      "bomd:closed_fist": {
+        "minecraft:collision_box": {
+          "width": 2.0,
+          "height": 2.0
+        }
       },
-      "scripts": {
-        "animate": [
-          "server_combat"
-        ]
+      "bomd:scale_1": {
+        "minecraft:health": {
+          "value": 250,
+          "max": 250
+        }
+      },
+      "bomd:scale_2": {
+        "minecraft:health": {
+          "value": 388,
+          "max": 388
+        }
+      },
+      "bomd:scale_3": {
+        "minecraft:health": {
+          "value": 525,
+          "max": 525
+        }
+      },
+      "bomd:scale_4": {
+        "minecraft:health": {
+          "value": 663,
+          "max": 663
+        }
+      },
+      "bomd:scale_5": {
+        "minecraft:health": {
+          "value": 800,
+          "max": 800
+        }
+      },
+      "bomd:scale_6": {
+        "minecraft:health": {
+          "value": 938,
+          "max": 938
+        }
+      },
+      "bomd:scale_7": {
+        "minecraft:health": {
+          "value": 1075,
+          "max": 1075
+        }
+      },
+      "bomd:scale_8": {
+        "minecraft:health": {
+          "value": 1213,
+          "max": 1213
+        }
+      },
+      "bomd:scripted_dash": {
+        "minecraft:physics": {
+          "has_gravity": false,
+          "has_collision": false
+        }
       }
     },
     "components": {
       "minecraft:type_family": {
         "family": [
           "nether_gauntlet",
+          "bomd_nether_gauntlet",
           "monster",
           "mob"
         ]
@@ -65,12 +127,9 @@
         "value": 250,
         "max": 250
       },
-      "minecraft:attack": {
-        "damage": 16
-      },
       "minecraft:boss": {
         "name": "Nether Gauntlet",
-        "hud_range": 64,
+        "hud_range": 48,
         "should_darken_sky": false
       },
       "minecraft:collision_box": {
@@ -81,80 +140,42 @@
         "has_gravity": false,
         "has_collision": true
       },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
       "minecraft:knockback_resistance": {
         "value": 1.0
       },
-      "minecraft:fire_immune": {},
-      "minecraft:persistent": {},
-      "minecraft:nameable": {},
-      "minecraft:pushable_by_entity": {
-        "presets": [
+      "minecraft:damage_sensor": {
+        "triggers": [
           {
-            "push_mode": "none"
+            "cause": "wither",
+            "deals_damage": "no"
           }
         ]
-      }
-    },
-    "component_groups": {
-      "bomd:open_collision": {
-        "minecraft:collision_box": {
-          "width": 2.0,
-          "height": 4.0
-        }
       },
-      "bomd:closed_collision": {
-        "minecraft:collision_box": {
-          "width": 2.0,
-          "height": 2.0
-        }
+      "minecraft:fire_immune": {},
+      "minecraft:persistent": {},
+      "minecraft:experience_reward": {
+        "on_death": 0
       }
     },
     "events": {
-      "minecraft:entity_spawned": {
-        "sequence": [
-          {
-            "remove": {
-              "component_groups": [
-                "bomd:closed_collision"
-              ]
-            }
-          },
-          {
-            "add": {
-              "component_groups": [
-                "bomd:open_collision"
-              ]
-            }
-          },
-          {
-            "set_property": {
-              "bomd:server_attack": 0,
-              "bomd:animation_state": 0,
-              "bomd:visual_state": 0,
-              "bomd:eye_open": true
-            }
-          }
-        ]
-      },
       "bomd:open_hand": {
         "sequence": [
           {
             "remove": {
               "component_groups": [
-                "bomd:closed_collision"
+                "bomd:closed_fist"
               ]
             }
           },
           {
             "add": {
               "component_groups": [
-                "bomd:open_collision"
+                "bomd:open_hand"
               ]
-            }
-          },
-          {
-            "set_property": {
-              "bomd:eye_open": true
             }
           }
         ]
@@ -164,132 +185,231 @@
           {
             "remove": {
               "component_groups": [
-                "bomd:open_collision"
+                "bomd:open_hand"
               ]
             }
           },
           {
             "add": {
               "component_groups": [
-                "bomd:closed_collision"
+                "bomd:closed_fist"
               ]
-            }
-          },
-          {
-            "set_property": {
-              "bomd:eye_open": false
             }
           }
         ]
       },
-      "bomd:gauntlet_idle_visual": {
+      "bomd:scale_1": {
         "sequence": [
           {
             "remove": {
               "component_groups": [
-                "bomd:closed_collision"
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
               ]
             }
           },
           {
             "add": {
               "component_groups": [
-                "bomd:open_collision"
+                "bomd:scale_1"
               ]
-            }
-          },
-          {
-            "set_property": {
-              "bomd:animation_state": 0,
-              "bomd:visual_state": 0,
-              "bomd:eye_open": true
             }
           }
         ]
       },
-      "bomd:gauntlet_idle_animation": {
-        "set_property": {
-          "bomd:animation_state": 0
-        }
-      },
-      "bomd:gauntlet_normal_visual": {
-        "set_property": {
-          "bomd:visual_state": 0
-        }
-      },
-      "bomd:gauntlet_punch_begin": {
-        "set_property": {
-          "bomd:animation_state": 1,
-          "bomd:visual_state": 0
-        }
-      },
-      "bomd:gauntlet_punch_loop": {
-        "set_property": {
-          "bomd:animation_state": 2
-        }
-      },
-      "bomd:gauntlet_punch_stop": {
-        "set_property": {
-          "bomd:animation_state": 3
-        }
-      },
-      "bomd:gauntlet_swirl_begin": {
-        "set_property": {
-          "bomd:animation_state": 4,
-          "bomd:visual_state": 2
-        }
-      },
-      "bomd:gauntlet_swirl_open": {
-        "set_property": {
-          "bomd:visual_state": 0
-        }
-      },
-      "bomd:gauntlet_laser_begin": {
+      "bomd:scale_2": {
         "sequence": [
           {
             "remove": {
               "component_groups": [
-                "bomd:closed_collision"
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
               ]
             }
           },
           {
             "add": {
               "component_groups": [
-                "bomd:open_collision"
+                "bomd:scale_2"
               ]
-            }
-          },
-          {
-            "set_property": {
-              "bomd:animation_state": 5,
-              "bomd:visual_state": 1,
-              "bomd:eye_open": true
             }
           }
         ]
       },
-      "bomd:gauntlet_laser_active": {
-        "set_property": {
-          "bomd:animation_state": 6,
-          "bomd:visual_state": 2
+      "bomd:scale_3": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_3"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_4": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_4"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_5": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_5"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_6": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_6"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_7": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_7"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:scale_8": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "bomd:scale_8"
+              ]
+            }
+          }
+        ]
+      },
+      "bomd:begin_scripted_dash": {
+        "add": {
+          "component_groups": [
+            "bomd:scripted_dash"
+          ]
         }
       },
-      "bomd:gauntlet_laser_stop": {
-        "set_property": {
-          "bomd:animation_state": 7,
-          "bomd:visual_state": 0
-        }
-      },
-      "bomd:gauntlet_cast_begin": {
-        "set_property": {
-          "bomd:animation_state": 8,
-          "bomd:visual_state": 1
-        }
-      },
-      "bomd:gauntlet_cast_release": {
-        "set_property": {
-          "bomd:visual_state": 2
+      "bomd:end_scripted_dash": {
+        "remove": {
+          "component_groups": [
+            "bomd:scripted_dash"
+          ]
         }
       }
     }

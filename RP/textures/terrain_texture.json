@@ -5,28 +5,55 @@
   "num_mip_levels": 4,
   "texture_data": {
     "bomd_altar_unlit": {
-      "textures": [
-        "textures/bomd/night_lich/blocks/chiseled_stone_altar"
-      ]
+      "textures": ["textures/bomd/night_lich/blocks/chiseled_stone_altar"]
     },
     "bomd_altar_lit": {
-      "textures": [
-        "textures/bomd/night_lich/blocks/chiseled_stone_altar_lit"
-      ]
+      "textures": ["textures/bomd/night_lich/blocks/chiseled_stone_altar_lit"]
     },
     "bomd_altar_dark": {
-      "textures": [
-        "textures/bomd/night_lich/blocks/dark_chiseled_stone_bricks"
-      ]
+      "textures": ["textures/bomd/night_lich/blocks/dark_chiseled_stone_bricks"]
     },
     "bomd_gauntlet_blackstone": {
-      "textures": "textures/bomd/nether_gauntlet/blocks/gauntlet_blackstone"
+      "textures": ["textures/bomd/nether_gauntlet/blocks/gauntlet_blackstone"]
     },
-    "bomd_sealed_blackstone": {
-      "textures": "textures/blocks/polished_blackstone_bricks"
+    "bomd_void_lily": {
+      "textures": ["textures/bomd/blocks/void_lily"]
+    },
+    "bomd_void_healer": {
+      "textures": ["textures/bomd/void_blossom/void_blossom_healer"]
+    },
+    "bomd_vine_wall": {
+      "textures": ["textures/bomd/blocks/vine_wall"]
     },
     "bomd_levitation_block": {
-      "textures": "textures/bomd/night_lich/blocks/levitation_block"
+      "textures": ["textures/bomd/blocks/levitation_block"]
+    },
+    "bomd_mob_ward": {
+      "textures": ["textures/bomd/blocks/mob_ward"]
+    },
+    "bomd_mob_ward_item": {
+      "textures": ["textures/bomd/items/mob_ward"]
+    },
+    "bomd_monolith": {
+      "textures": ["textures/bomd/blocks/monolith"]
+    },
+    "bomd_monolith_item": {
+      "textures": ["textures/bomd/items/monolith"]
+    },
+    "bomd_void_seed": {
+      "textures": ["textures/blocks/moss_block"]
+    },
+    "bomd_obsidilith_end_frame": {
+      "textures": ["textures/bomd/obsidilith/blocks/obsidilith_end_frame"]
+    },
+    "bomd_obsidilith_end_frame_filled": {
+      "textures": ["textures/bomd/obsidilith/blocks/obsidilith_end_frame"]
+    },
+    "bomd_obsidilith_end_frame_side": {
+      "textures": ["textures/bomd/obsidilith/blocks/obsidilith_end_frame_side"]
+    },
+    "bomd_obsidilith_rune": {
+      "textures": ["textures/bomd/obsidilith/blocks/obsidilith_rune"]
     }
   }
 }

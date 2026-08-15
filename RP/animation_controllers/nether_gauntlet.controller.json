@@ -2,77 +2,154 @@
   "format_version": "1.10.0",
   "animation_controllers": {
     "controller.animation.bomd_nether_gauntlet.action": {
-      "initial_state": "idle",
+      "initial_state": "dormant",
       "states": {
+        "dormant": {
+          "animations": [
+            "idle"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
+            },
+            {
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
+            },
+            {
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
+            },
+            {
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
+            },
+            {
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
+            },
+            {
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
+            },
+            {
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
+            },
+            {
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            }
+          ],
+          "blend_transition": 0.08,
+          "blend_via_shortest_path": true
+        },
+        "awakening": {
+          "animations": [
+            "cast"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
+            },
+            {
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
+            },
+            {
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
+            },
+            {
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
+            },
+            {
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
+            },
+            {
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
+            },
+            {
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
+            },
+            {
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            }
+          ],
+          "blend_transition": 0.05,
+          "blend_via_shortest_path": true
+        },
         "idle": {
           "animations": [
             "idle"
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "punch_start": "q.property('bomd:animation_state') == 1"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
             },
             {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
             },
             {
-              "cast": "q.property('bomd:animation_state') == 8"
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.05,
+          "blend_via_shortest_path": true
         },
-        "punch_start": {
+        "punch": {
           "animations": [
             "punch_start"
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
             },
             {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
             },
             {
-              "cast": "q.property('bomd:animation_state') == 8"
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            },
+            {
+              "punch_loop": "query.all_animations_finished"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
         },
         "punch_loop": {
           "animations": [
@@ -80,34 +157,35 @@
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_start": "q.property('bomd:animation_state') == 1"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
             },
             {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
             },
             {
-              "cast": "q.property('bomd:animation_state') == 8"
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.02,
+          "blend_via_shortest_path": true
         },
         "punch_stop": {
           "animations": [
@@ -115,215 +193,235 @@
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_start": "q.property('bomd:animation_state') == 1"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
             },
             {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
             },
             {
-              "cast": "q.property('bomd:animation_state') == 8"
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
         },
-        "swirl_punch": {
+        "laser": {
+          "animations": [
+            "laser_eye_start"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
+            },
+            {
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
+            },
+            {
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
+            },
+            {
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
+            },
+            {
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
+            },
+            {
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
+            },
+            {
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
+            },
+            {
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            },
+            {
+              "laser_loop": "query.all_animations_finished"
+            }
+          ],
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
+        },
+        "laser_loop": {
+          "animations": [
+            "laser_eye_loop"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
+            },
+            {
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
+            },
+            {
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
+            },
+            {
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
+            },
+            {
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
+            },
+            {
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
+            },
+            {
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
+            },
+            {
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            }
+          ],
+          "blend_transition": 0.02,
+          "blend_via_shortest_path": true
+        },
+        "laser_stop": {
+          "animations": [
+            "laser_eye_stop"
+          ],
+          "transitions": [
+            {
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
+            },
+            {
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
+            },
+            {
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
+            },
+            {
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
+            },
+            {
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
+            },
+            {
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
+            },
+            {
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
+            },
+            {
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
+            },
+            {
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
+            }
+          ],
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
+        },
+        "spin": {
           "animations": [
             "swirl_punch"
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_start": "q.property('bomd:animation_state') == 1"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
             },
             {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "cast": "q.property('bomd:animation_state') == 8"
+              "blindness": "q.property('bomd:gauntlet_animation_state') == 6"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
         },
-        "laser_start": {
-          "animations": [
-            "laser_start"
-          ],
-          "transitions": [
-            {
-              "death": "!q.is_alive"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
-            },
-            {
-              "punch_start": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
-            },
-            {
-              "cast": "q.property('bomd:animation_state') == 8"
-            }
-          ],
-          "blend_transition": 0.0
-        },
-        "laser_loop": {
-          "animations": [
-            "laser_loop"
-          ],
-          "transitions": [
-            {
-              "death": "!q.is_alive"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
-            },
-            {
-              "punch_start": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "laser_start": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
-            },
-            {
-              "cast": "q.property('bomd:animation_state') == 8"
-            }
-          ],
-          "blend_transition": 0.0
-        },
-        "laser_stop": {
-          "animations": [
-            "laser_stop"
-          ],
-          "transitions": [
-            {
-              "death": "!q.is_alive"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
-            },
-            {
-              "punch_start": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "laser_start": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "cast": "q.property('bomd:animation_state') == 8"
-            }
-          ],
-          "blend_transition": 0.0
-        },
-        "cast": {
+        "blindness": {
           "animations": [
             "cast"
           ],
           "transitions": [
             {
-              "death": "!q.is_alive"
+              "death": "q.property('bomd:gauntlet_animation_state') == 7 || !q.is_alive"
             },
             {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "dormant": "q.property('bomd:gauntlet_animation_state') == 8"
             },
             {
-              "punch_start": "q.property('bomd:animation_state') == 1"
+              "awakening": "q.property('bomd:gauntlet_animation_state') == 9"
             },
             {
-              "punch_loop": "q.property('bomd:animation_state') == 2"
+              "idle": "q.property('bomd:gauntlet_animation_state') == 0"
             },
             {
-              "punch_stop": "q.property('bomd:animation_state') == 3"
+              "punch": "q.property('bomd:gauntlet_animation_state') == 1"
             },
             {
-              "swirl_punch": "q.property('bomd:animation_state') == 4"
+              "punch_stop": "q.property('bomd:gauntlet_animation_state') == 2"
             },
             {
-              "laser_start": "q.property('bomd:animation_state') == 5"
+              "laser": "q.property('bomd:gauntlet_animation_state') == 3"
             },
             {
-              "laser_loop": "q.property('bomd:animation_state') == 6"
+              "laser_stop": "q.property('bomd:gauntlet_animation_state') == 4"
             },
             {
-              "laser_stop": "q.property('bomd:animation_state') == 7"
+              "spin": "q.property('bomd:gauntlet_animation_state') == 5"
             }
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.03,
+          "blend_via_shortest_path": true
         },
         "death": {
           "animations": [
             "death"
           ],
-          "blend_transition": 0.0
+          "blend_transition": 0.05,
+          "blend_via_shortest_path": true
+        }
+      }
+    },
+    "controller.animation.bomd_nether_gauntlet.code_pose": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "animations": [
+            "code_pose"
+          ]
         }
       }
     }

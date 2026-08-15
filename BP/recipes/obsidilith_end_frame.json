@@ -1,0 +1,15 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:recipe_shaped": {
+    "description": { "identifier": "bomd:obsidilith_end_frame" },
+    "tags": ["crafting_table"],
+    "pattern": ["EOE", "ESE", "EEE"],
+    "key": {
+      "E": { "item": "minecraft:end_stone" },
+      "O": { "item": "minecraft:obsidian" },
+      "S": { "item": "bomd:obsidian_heart" }
+    },
+    "unlock": [{ "item": "bomd:obsidian_heart" }],
+    "result": { "item": "bomd:obsidilith_end_frame", "count": 1 }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "format_version": "1.26.20",
+  "minecraft:structure_template_feature": {
+    "description": {
+      "identifier": "bomd:void_blossom_cavern_feature"
+    },
+    "structure_name": "bomd:void_blossom_cavern_seed",
+    "adjustment_radius": 0,
+    "facing_direction": "north",
+    "ground_level": 0,
+    "rotate_around_center": false,
+    "constraints": {}
+  }
+}

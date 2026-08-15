@@ -31,7 +31,8 @@
               "rage": "q.property('bomd:animation_state') == 7"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.2,
+          "blend_via_shortest_path": true
         },
         "missiles": {
           "animations": [
@@ -39,28 +40,11 @@
           ],
           "transitions": [
             {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "teleporting": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "unteleport": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "rage": "q.property('bomd:animation_state') == 7"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "idle": "q.property('bomd:animation_state') != 1"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.18,
+          "blend_via_shortest_path": true
         },
         "comet": {
           "animations": [
@@ -68,28 +52,11 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "teleporting": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "unteleport": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "rage": "q.property('bomd:animation_state') == 7"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "idle": "q.property('bomd:animation_state') != 2"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.18,
+          "blend_via_shortest_path": true
         },
         "minions": {
           "animations": [
@@ -97,28 +64,11 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "teleporting": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "unteleport": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "rage": "q.property('bomd:animation_state') == 7"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "idle": "q.property('bomd:animation_state') != 3"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.18,
+          "blend_via_shortest_path": true
         },
         "teleport": {
           "animations": [
@@ -126,28 +76,17 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
               "teleporting": "q.property('bomd:animation_state') == 5"
             },
             {
               "unteleport": "q.property('bomd:animation_state') == 6"
             },
             {
-              "rage": "q.property('bomd:animation_state') == 7"
-            },
-            {
               "idle": "q.property('bomd:animation_state') == 0"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.08,
+          "blend_via_shortest_path": true
         },
         "teleporting": {
           "animations": [
@@ -155,28 +94,14 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
               "unteleport": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "rage": "q.property('bomd:animation_state') == 7"
             },
             {
               "idle": "q.property('bomd:animation_state') == 0"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0,
+          "blend_via_shortest_path": true
         },
         "unteleport": {
           "animations": [
@@ -184,28 +109,11 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "teleporting": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "rage": "q.property('bomd:animation_state') == 7"
-            },
-            {
               "idle": "q.property('bomd:animation_state') == 0"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.08,
+          "blend_via_shortest_path": true
         },
         "rage": {
           "animations": [
@@ -213,28 +121,11 @@
           ],
           "transitions": [
             {
-              "missiles": "q.property('bomd:animation_state') == 1"
-            },
-            {
-              "comet": "q.property('bomd:animation_state') == 2"
-            },
-            {
-              "minions": "q.property('bomd:animation_state') == 3"
-            },
-            {
-              "teleport": "q.property('bomd:animation_state') == 4"
-            },
-            {
-              "teleporting": "q.property('bomd:animation_state') == 5"
-            },
-            {
-              "unteleport": "q.property('bomd:animation_state') == 6"
-            },
-            {
-              "idle": "q.property('bomd:animation_state') == 0"
+              "idle": "q.property('bomd:animation_state') != 7"
             }
           ],
-          "blend_transition": 0
+          "blend_transition": 0.16,
+          "blend_via_shortest_path": true
         }
       }
     },
@@ -244,8 +135,7 @@
         "default": {
           "animations": [
             "skull_float"
-          ],
-          "blend_transition": 0
+          ]
         }
       }
     },
@@ -255,8 +145,7 @@
         "default": {
           "animations": [
             "float"
-          ],
-          "blend_transition": 0
+          ]
         }
       }
     },
@@ -266,8 +155,7 @@
         "default": {
           "animations": [
             "book_idle"
-          ],
-          "blend_transition": 0
+          ]
         }
       }
     },
@@ -277,8 +165,7 @@
         "default": {
           "animations": [
             "code_pose"
-          ],
-          "blend_transition": 0
+          ]
         }
       }
     }

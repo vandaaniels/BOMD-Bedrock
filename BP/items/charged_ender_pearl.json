@@ -1,0 +1,34 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "bomd:charged_ender_pearl",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.bomd:charged_ender_pearl.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "bomd:charged_ender_pearl"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:cooldown": {
+        "category": "bomd_charged_ender_pearl",
+        "duration": 9
+      },
+      "minecraft:use_modifiers": {
+        "use_duration": 0,
+        "movement_modifier": 1
+      },
+      "bomd:charged_ender_pearl": {}
+    }
+  }
+}

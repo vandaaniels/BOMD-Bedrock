@@ -1,0 +1,17 @@
+{
+  "format_version": "1.10.0",
+  "animations": {
+    "animation.bomd_gauntlet_laser_beam.scale": {
+      "loop": true,
+      "bones": {
+        "beam": {
+          "scale": [
+            "q.property('bomd:beam_active') ? 1.0 : 0.34",
+            "q.property('bomd:beam_active') ? 1.0 : 0.34",
+            "math.max(0.01, q.property('bomd:beam_length') / 16.0)"
+          ]
+        }
+      }
+    }
+  }
+}

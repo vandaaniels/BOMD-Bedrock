@@ -1,0 +1,28 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:void_petal_blade",
+      "materials": {
+        "default": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/bomd/void_blossom/petal_blade"
+      },
+      "geometry": {
+        "default": "geometry.bomd_void_petal_blade"
+      },
+      "animations": {
+        "spin": "animation.bomd_void_projectile.spin"
+      },
+      "scripts": {
+        "animate": [
+          "spin"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.bomd_void_projectile"
+      ]
+    }
+  }
+}

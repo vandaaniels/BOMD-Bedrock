@@ -1,0 +1,24 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_gauntlet_laser_beam": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": ["Texture.default"],
+      "color": {
+        "r": 1.0,
+        "g": "q.property('bomd:beam_active') ? 0.12 : 0.35",
+        "b": "q.property('bomd:beam_active') ? 0.02 : 0.08",
+        "a": "q.property('bomd:beam_active') ? 0.96 : 0.34"
+      },
+      "uv_anim": {
+        "offset": [0, "q.life_time * -1.8"],
+        "scale": [1, 1]
+      }
+    }
+  }
+}

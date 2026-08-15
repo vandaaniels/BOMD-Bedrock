@@ -1,0 +1,69 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.bomd_obsidilith": {
+      "geometry": "Geometry.default",
+      "materials": [{ "*": "Material.default" }],
+      "textures": ["Texture.default"],
+      "color": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": "1.0 - (q.property('bomd:obsidilith_death_tick') / 90.0)"
+      }
+    },
+    "controller.render.bomd_obsidilith_runes_idle": {
+      "geometry": "Geometry.default",
+      "materials": [{ "*": "Material.default" }],
+      "textures": ["Texture.rune_idle"],
+      "color": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": "(q.property('bomd:obsidilith_animation') == 0 || q.property('bomd:obsidilith_animation') == 7) ? 1.0 : 0.0"
+      }
+    },
+    "controller.render.bomd_obsidilith_runes_emissive": {
+      "arrays": {
+        "textures": {
+          "Array.runes": [
+            "Texture.rune_idle",
+            "Texture.rune_burst",
+            "Texture.rune_wave",
+            "Texture.rune_spike",
+            "Texture.rune_anvil",
+            "Texture.rune_pillar",
+            "Texture.rune_idle",
+            "Texture.rune_idle",
+            "Texture.rune_pillar"
+          ]
+        }
+      },
+      "geometry": "Geometry.default",
+      "materials": [{ "*": "Material.emissive" }],
+      "textures": ["Array.runes[q.property('bomd:obsidilith_animation')]"],
+      "color": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": "((q.property('bomd:obsidilith_animation') >= 1 && q.property('bomd:obsidilith_animation') <= 5) || q.property('bomd:obsidilith_animation') == 8) ? 1.0 : 0.0"
+      }
+    },
+    "controller.render.bomd_obsidilith_armor": {
+      "geometry": "Geometry.default",
+      "materials": [{ "*": "Material.emissive" }],
+      "textures": ["Texture.armor"],
+      "part_visibility": [{ "*": "q.property('bomd:obsidilith_shielded')" }],
+      "color": {
+        "r": "q.property('bomd:obsidilith_animation') == 1 ? 1.0 : (q.property('bomd:obsidilith_animation') == 2 ? 0.8 : (q.property('bomd:obsidilith_animation') == 3 ? 0.0 : (q.property('bomd:obsidilith_animation') == 4 ? 0.62 : 1.0)))",
+        "g": "q.property('bomd:obsidilith_animation') == 1 ? 0.65 : (q.property('bomd:obsidilith_animation') == 2 ? 0.2 : (q.property('bomd:obsidilith_animation') == 3 ? 1.0 : (q.property('bomd:obsidilith_animation') == 4 ? 0.26 : 1.0)))",
+        "b": "q.property('bomd:obsidilith_animation') == 1 ? 0.1 : (q.property('bomd:obsidilith_animation') == 2 ? 0.4 : (q.property('bomd:obsidilith_animation') == 3 ? 1.0 : (q.property('bomd:obsidilith_animation') == 4 ? 0.96 : 1.0)))",
+        "a": "q.property('bomd:obsidilith_shielded') ? 0.72 : 0.0"
+      },
+      "uv_anim": {
+        "offset": ["q.life_time * 0.018", "q.life_time * -0.004"],
+        "scale": [1.0, 1.0]
+      }
+    }
+  }
+}

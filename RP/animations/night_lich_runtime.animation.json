@@ -5,16 +5,12 @@
       "loop": true,
       "bones": {
         "code_root": {
-          "rotation": [
-            "-variable.bomd_body_pitch",
-            0,
-            0
-          ]
+          "rotation": ["-variable.bomd_body_pitch", 0, 0]
         },
         "headBase": {
           "rotation": [
-            "variable.bomd_body_pitch + query.property('bomd:head_pitch')",
-            "query.property('bomd:head_yaw')",
+            "variable.bomd_body_pitch - math.clamp(query.head_x_rotation(0), -45.0, 45.0)",
+            "math.clamp(query.head_y_rotation(0), -60.0, 60.0)",
             0
           ]
         }

@@ -4,38 +4,70 @@
     "controller.render.bomd_nether_gauntlet": {
       "arrays": {
         "textures": {
-          "Array.visual": [
-            "Texture.normal",
-            "Texture.charging",
-            "Texture.overcharged"
-          ]
-        },
-        "materials": {
-          "Array.visual": [
-            "Material.default",
-            "Material.fullbright",
-            "Material.fullbright"
+          "Array.base": [
+            "Texture.default",
+            "Texture.hurt"
           ]
         }
       },
       "geometry": "Geometry.default",
       "materials": [
         {
-          "*": "Array.visual[q.property('bomd:visual_state')]"
+          "*": "Material.default"
         }
       ],
       "textures": [
-        "q.hurt_time > 0.0 ? Texture.hurt : Array.visual[q.property('bomd:visual_state')]"
+        "Array.base[query.property('bomd:gauntlet_hurt')]"
       ],
       "uv_anim": {
+        "offset": [0, 0],
+        "scale": [1, 1]
+      }
+    },
+    "controller.render.bomd_nether_gauntlet_emissive": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.emissive"
+        }
+      ],
+      "textures": ["Texture.emissive"],
+      "color": {
+        "r": 1,
+        "g": 0.2,
+        "b": 0.06,
+        "a": "0.18 + query.property('bomd:gauntlet_energy') * 0.36"
+      },
+      "uv_anim": {
+        "offset": [0, 0],
+        "scale": [1, 1]
+      }
+    },
+    "controller.render.bomd_nether_gauntlet_energy": {
+      "geometry": "Geometry.default",
+      "part_visibility": [
+        {
+          "codeRoot": "query.property('bomd:gauntlet_energy') > 0"
+        }
+      ],
+      "materials": [
+        {
+          "*": "Material.emissive"
+        }
+      ],
+      "textures": ["Texture.energy"],
+      "color": {
+        "r": 1,
+        "g": 0.08,
+        "b": 0.02,
+        "a": "query.property('bomd:gauntlet_energy') == 2 ? 0.7 : (query.property('bomd:gauntlet_energy') == 1 ? 0.32 : 0)"
+      },
+      "uv_anim": {
         "offset": [
-          0,
-          0
+          "query.life_time * 0.18",
+          "query.life_time * 0.18"
         ],
-        "scale": [
-          1,
-          1
-        ]
+        "scale": [1, 1]
       }
     }
   }

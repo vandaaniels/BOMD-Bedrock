@@ -1,5 +1,5 @@
 {
-  "format_version": "1.26.30",
+  "format_version": "1.26.0",
   "minecraft:entity": {
     "description": {
       "identifier": "bomd:night_lich",
@@ -9,10 +9,7 @@
       "properties": {
         "bomd:phase": {
           "type": "int",
-          "range": [
-            1,
-            4
-          ],
+          "range": [1, 4],
           "default": 1,
           "client_sync": true
         },
@@ -23,73 +20,77 @@
         },
         "bomd:animation_state": {
           "type": "int",
-          "range": [
-            0,
-            7
-          ],
+          "range": [0, 7],
           "default": 0,
           "client_sync": true
         },
-        "bomd:head_yaw": {
-          "type": "float",
-          "range": [
-            -55.0,
-            55.0
-          ],
-          "default": 0.0,
-          "client_sync": true
-        },
-        "bomd:head_pitch": {
-          "type": "float",
-          "range": [
-            -35.0,
-            35.0
-          ],
-          "default": 0.0,
-          "client_sync": true
-        },
-        "bomd:server_attack": {
+        "bomd:lich_glow": {
           "type": "int",
-          "range": [
-            0,
-            7
-          ],
-          "default": 0,
-          "client_sync": false
+          "range": [0, 3],
+          "default": 1,
+          "client_sync": true
         }
-      },
-      "animations": {
-        "server_combat": "controller.animation.bomd.lich.server",
-        "server_lich_missiles": "animation.bomd.lich.server.missiles",
-        "server_lich_comet": "animation.bomd.lich.server.comet",
-        "server_lich_minions": "animation.bomd.lich.server.minions",
-        "server_lich_teleport": "animation.bomd.lich.server.teleport",
-        "server_lich_rage_comets": "animation.bomd.lich.server.rage_comets",
-        "server_lich_rage_missiles": "animation.bomd.lich.server.rage_missiles",
-        "server_lich_rage_minions": "animation.bomd.lich.server.rage_minions"
-      },
-      "scripts": {
-        "animate": [
-          "server_combat"
-        ]
       }
     },
     "component_groups": {
+      "bomd:scale_1": {
+        "minecraft:health": {
+          "value": 300,
+          "max": 300
+        }
+      },
+      "bomd:scale_2": {
+        "minecraft:health": {
+          "value": 465,
+          "max": 465
+        }
+      },
+      "bomd:scale_3": {
+        "minecraft:health": {
+          "value": 630,
+          "max": 630
+        }
+      },
+      "bomd:scale_4": {
+        "minecraft:health": {
+          "value": 795,
+          "max": 795
+        }
+      },
+      "bomd:scale_5": {
+        "minecraft:health": {
+          "value": 960,
+          "max": 960
+        }
+      },
+      "bomd:scale_6": {
+        "minecraft:health": {
+          "value": 1125,
+          "max": 1125
+        }
+      },
+      "bomd:scale_7": {
+        "minecraft:health": {
+          "value": 1290,
+          "max": 1290
+        }
+      },
+      "bomd:scale_8": {
+        "minecraft:health": {
+          "value": 1455,
+          "max": 1455
+        }
+      },
       "bomd:teleporting": {
         "minecraft:collision_box": {
-          "width": 1.8,
-          "height": 3.0
+          "width": 0.01,
+          "height": 0.01
         }
       }
     },
     "components": {
       "minecraft:type_family": {
-        "family": [
-          "night_lich",
-          "monster",
-          "undead",
-          "mob"
-        ]
+        "family": ["night_lich", "bomd_night_lich", "monster", "undead", "mob"]
       },
       "minecraft:health": {
         "value": 300,
@@ -108,87 +109,212 @@
         "has_gravity": false,
         "has_collision": true
       },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
       "minecraft:knockback_resistance": {
         "value": 1.0
       },
       "minecraft:fire_immune": {},
       "minecraft:persistent": {},
-      "minecraft:pushable_by_entity": {
-        "presets": [
-          {
-            "push_mode": "none"
-          }
-        ]
+      "minecraft:experience_reward": {
+        "on_death": 1500
       }
     },
     "events": {
+      "bomd:scale_1": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_1"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_2": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_2"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_3": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_3"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_4": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_4"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_5": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_5"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_6": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_6"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_7": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_7"]
+            }
+          }
+        ]
+      },
+      "bomd:scale_8": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "bomd:scale_1",
+                "bomd:scale_2",
+                "bomd:scale_3",
+                "bomd:scale_4",
+                "bomd:scale_5",
+                "bomd:scale_6",
+                "bomd:scale_7",
+                "bomd:scale_8"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": ["bomd:scale_8"]
+            }
+          }
+        ]
+      },
       "bomd:begin_teleport": {
         "add": {
-          "component_groups": [
-            "bomd:teleporting"
-          ]
+          "component_groups": ["bomd:teleporting"]
         }
       },
       "bomd:end_teleport": {
         "remove": {
-          "component_groups": [
-            "bomd:teleporting"
-          ]
-        }
-      },
-      "minecraft:entity_spawned": {
-        "set_property": {
-          "bomd:server_attack": 0,
-          "bomd:animation_state": 0,
-          "bomd:casting": false
-        }
-      },
-      "bomd:lich_idle_visual": {
-        "set_property": {
-          "bomd:animation_state": 0,
-          "bomd:casting": false
-        }
-      },
-      "bomd:lich_missiles_visual": {
-        "set_property": {
-          "bomd:animation_state": 1,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_comet_visual": {
-        "set_property": {
-          "bomd:animation_state": 2,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_minions_visual": {
-        "set_property": {
-          "bomd:animation_state": 3,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_teleport_visual": {
-        "set_property": {
-          "bomd:animation_state": 4,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_teleporting_visual": {
-        "set_property": {
-          "bomd:animation_state": 5,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_unteleport_visual": {
-        "set_property": {
-          "bomd:animation_state": 6,
-          "bomd:casting": true
-        }
-      },
-      "bomd:lich_rage_visual": {
-        "set_property": {
-          "bomd:animation_state": 7,
-          "bomd:casting": true
+          "component_groups": ["bomd:teleporting"]
         }
       }
     }

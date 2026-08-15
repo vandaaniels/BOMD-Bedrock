@@ -1,0 +1,28 @@
+{
+  "format_version": "1.26.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "bomd:void_blossom_hitbox",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/particle/bomd_transparent"
+      },
+      "geometry": {
+        "default": "geometry.bomd_void_hitbox"
+      },
+      "animations": {
+        "spin": "animation.bomd_void_projectile.spin"
+      },
+      "scripts": {
+        "animate": [
+          "spin"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.bomd_void_projectile"
+      ]
+    }
+  }
+}

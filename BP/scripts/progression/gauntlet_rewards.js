@@ -1,212 +1,155 @@
 // @ts-check
 
-import { ItemStack, system, world } from "@minecraft/server";
-import { translate } from "../core/i18n.js";
-import { attempt, schedule } from "../core/safe.js";
-import { isLocationLoaded } from "../core/world_bounds.js";
-import {
-  playGauntletSound,
-  spawnGauntletBurst,
-  spawnGauntletParticle
-} from "../visuals/nether_gauntlet.js";
+import { ItemStack, system } from "@minecraft/server";
+import { BLAZING_EYE_ITEM } from "../core/config.js";
+import { attempt } from "../core/safe.js";
 
-const RAY_COUNT = 5;
-const TOTAL_EXPERIENCE = 1000;
-const EXPERIENCE_PULSES = 20;
-const CHEST_LOOT_TABLE = "bomd/nether_gauntlet/gauntlet_chest";
+const PROTECTED_BLOCKS = new Set([
+  "minecraft:air",
+  "minecraft:bedrock",
+  "minecraft:chest",
+  "minecraft:lava",
+  "minecraft:flowing_lava",
+  "bomd:gauntlet_blackstone",
+  "bomd:sealed_blackstone"
+]);
 
-function blockIsSolid(block) {
-  return block && block.typeId !== "minecraft:air";
+function groundBelow(dimension, location) {
+  return (
+    attempt(
+      () =>
+        dimension.getBlockBelow(
+          {
+            x: Math.floor(location.x),
+            y: Math.floor(location.y) + 2,
+            z: Math.floor(location.z)
+          },
+          { maxDistance: 16 }
+        ),
+      "find Nether Gauntlet death floor"
+    ) ?? dimension.getBlock({
+      x: Math.floor(location.x),
+      y: Math.floor(location.y) - 1,
+      z: Math.floor(location.z)
+    })
+  );
 }
 
-function findFloorY(dimension, location) {
-  const x = Math.floor(location.x);
-  const z = Math.floor(location.z);
-  for (let y = Math.floor(location.y); y >= Math.floor(location.y) - 4; y -= 1) {
-    const block = attempt(
-      () => dimension.getBlock({ x, y, z }),
-      "find Gauntlet reward floor"
-    );
-    if (blockIsSolid(block)) {
-      return y;
-    }
-  }
-  return Math.floor(location.y) - 1;
-}
-
-function setRewardBlock(dimension, location, typeId) {
+function replaceVeinBlock(dimension, location, typeId) {
   const block = attempt(
     () => dimension.getBlock(location),
-    `get ${typeId} reward block`
+    "read Nether Gauntlet death vein"
   );
-  if (!block) {
+  if (!block || PROTECTED_BLOCKS.has(block.typeId)) {
     return false;
   }
-  return attempt(
-    () => {
-      block.setType(typeId);
-      return true;
-    },
-    `place ${typeId}`
-  ) === true;
+  return (
+    attempt(
+      () => {
+        block.setType(typeId);
+        return true;
+      },
+      "place Nether Gauntlet death vein"
+    ) === true
+  );
 }
 
-function createAncientDebrisTrails(dimension, center, floorY) {
-  const used = new Set();
-  const endpoints = [];
-  const baseAngle = Math.random() * Math.PI * 2;
-  for (let ray = 0; ray < RAY_COUNT; ray += 1) {
-    const distance = 8 - ray;
+function placeAncientDebrisVeins(dimension, center) {
+  for (let vein = 0; vein < 5; vein += 1) {
     const angle =
-      baseAngle + (Math.PI * 2 * ray) / RAY_COUNT + (Math.random() - 0.5) * 0.42;
-    const end = {
-      x: Math.floor(center.x + Math.cos(angle) * distance),
-      y: floorY,
-      z: Math.floor(center.z + Math.sin(angle) * distance)
-    };
-    endpoints.push(end);
-    const points = Math.max(2, distance * 2);
-    for (let point = 1; point < points - 1; point += 1) {
-      const t = point / (points - 1);
+      (Math.PI * 2 * vein) / 5 + (Math.random() - 0.5) * 0.45;
+    const length = 8 - vein;
+    let endpoint;
+    for (let step = 1; step <= length; step += 1) {
       const location = {
-        x: Math.floor(center.x + (end.x - center.x) * t),
-        y: floorY,
-        z: Math.floor(center.z + (end.z - center.z) * t)
+        x: Math.round(center.x + Math.cos(angle) * step),
+        y:
+          center.y -
+          Math.floor(step / 4) +
+          (step % 3 === 0 ? (vein % 2 === 0 ? 1 : -1) : 0),
+        z: Math.round(center.z + Math.sin(angle) * step)
       };
-      const key = `${location.x}:${location.y}:${location.z}`;
-      if (used.has(key)) {
-        continue;
+      if (
+        replaceVeinBlock(
+          dimension,
+          location,
+          "minecraft:netherrack"
+        )
+      ) {
+        endpoint = location;
       }
-      used.add(key);
-      setRewardBlock(dimension, location, "minecraft:netherrack");
-      spawnGauntletParticle(dimension, "bomd:gauntlet_spark", {
-        x: location.x + 0.5,
-        y: location.y + 1.05,
-        z: location.z + 0.5
-      });
+    }
+    if (endpoint) {
+      replaceVeinBlock(
+        dimension,
+        endpoint,
+        "minecraft:ancient_debris"
+      );
     }
   }
-
-  // Endpoints are written last so every ray always ends in ancient debris,
-  // even when two rounded paths cross.
-  for (const endpoint of endpoints) {
-    setRewardBlock(dimension, endpoint, "minecraft:ancient_debris");
-    spawnGauntletParticle(dimension, "bomd:gauntlet_spark", {
-      x: endpoint.x + 0.5,
-      y: endpoint.y + 1.05,
-      z: endpoint.z + 0.5
-    });
-  }
 }
 
-function fillRewardChest(dimension, location) {
-  if (!setRewardBlock(dimension, location, "minecraft:chest")) {
-    return false;
-  }
-  const container = dimension
-    .getBlock(location)
-    ?.getComponent("minecraft:inventory")?.container;
+function fillRewardChest(dimension, location, retries = 2) {
+  const container = attempt(
+    () =>
+      dimension
+        .getBlock(location)
+        ?.getComponent("minecraft:inventory")?.container,
+    "open Nether Gauntlet reward chest"
+  );
   if (!container) {
-    return false;
+    if (retries > 0) {
+      system.runTimeout(
+        () => fillRewardChest(dimension, location, retries - 1),
+        1
+      );
+    } else {
+      attempt(
+        () => dimension.spawnItem(new ItemStack(BLAZING_EYE_ITEM, 1), location),
+        "drop fallback Nether Gauntlet reward"
+      );
+    }
+    return;
   }
   container.clearAll();
-
-  const manager = world.getLootTableManager();
-  const table = manager.getLootTable(CHEST_LOOT_TABLE);
-  if (table) {
-    for (const stack of manager.generateLootFromTable(table) ?? []) {
-      container.addItem(stack);
-    }
-    return true;
-  }
-
-  // Fallback protects the reward if a future engine changes the loot manager.
-  container.addItem(new ItemStack("bomd:blazing_eye", 1));
-  console.warn("[BOMD] Gauntlet chest loot table missing; used direct Blazing Eye fallback.");
-  return true;
+  container.addItem(new ItemStack(BLAZING_EYE_ITEM, 1));
 }
 
-function distributeExperience(dimension, center) {
-  const perPulse = TOTAL_EXPERIENCE / EXPERIENCE_PULSES;
-  for (let pulse = 0; pulse < EXPERIENCE_PULSES; pulse += 1) {
-    schedule(
-      pulse + 1,
-      () => {
-        const players = dimension.getPlayers({
-          location: center,
-          maxDistance: 64
-        });
-        let collector;
-        let best = Number.POSITIVE_INFINITY;
-        for (const player of players) {
-          const dx = player.location.x - center.x;
-          const dy = player.location.y - center.y;
-          const dz = player.location.z - center.z;
-          const squared = dx * dx + dy * dy + dz * dz;
-          if (squared < best) {
-            collector = player;
-            best = squared;
-          }
-        }
-        if (collector) {
-          attempt(
-            () => collector.addExperience(perPulse),
-            "grant Nether Gauntlet experience"
-          );
-        }
-        spawnGauntletParticle(dimension, "minecraft:basic_portal_particle", {
-          x: center.x + (Math.random() - 0.5) * 2,
-          y: center.y + 0.6 + Math.random() * 1.6,
-          z: center.z + (Math.random() - 0.5) * 2
-        });
-      },
-      "distribute Nether Gauntlet experience"
+export function placeGauntletDeathReward(dimension, deathLocation) {
+  const ground = groundBelow(dimension, deathLocation);
+  if (!ground) {
+    attempt(
+      () => dimension.spawnItem(new ItemStack(BLAZING_EYE_ITEM, 1), deathLocation),
+      "drop Nether Gauntlet reward without floor"
     );
+    return;
   }
-}
-
-export function createGauntletDeathReward(dimension, deathLocation, delayTicks = 50) {
   const center = {
-    x: Math.floor(deathLocation.x),
-    y: Math.floor(deathLocation.y),
-    z: Math.floor(deathLocation.z)
+    x: ground.location.x,
+    y: ground.location.y,
+    z: ground.location.z
   };
-  const buildReward = (retry = 0) => {
-      if (!isLocationLoaded(dimension, deathLocation)) {
-        if (retry < 60) schedule(20, () => buildReward(retry + 1), "resume Nether Gauntlet death reward");
-        return;
-      }
-      const floorY = findFloorY(dimension, deathLocation);
-      attempt(
-        () => dimension.createExplosion(
-          { x: deathLocation.x, y: floorY + 1, z: deathLocation.z },
-          4,
-          { breaksBlocks: false, causesFire: false, allowUnderwater: true }
-        ),
-        "create controlled Nether Gauntlet death explosion"
-      );
-      createAncientDebrisTrails(dimension, center, floorY);
-      const chestLocation = { x: center.x, y: floorY + 1, z: center.z };
-      fillRewardChest(dimension, chestLocation);
-      distributeExperience(dimension, {
-        x: center.x + 0.5,
-        y: floorY + 1.2,
-        z: center.z + 0.5
-      });
-      spawnGauntletBurst(
-        dimension,
-        { x: center.x + 0.5, y: floorY + 1.2, z: center.z + 0.5 },
-        64,
-        3.0
-      );
-      playGauntletSound(
-        dimension,
-        "bomd.nether_gauntlet.death",
-        chestLocation,
-        1.4,
-        0.82
-      );
-      world.sendMessage(translate("bomd.message.gauntlet.reward_created"));
+  placeAncientDebrisVeins(dimension, center);
+
+  const chestLocation = {
+    x: center.x,
+    y: center.y + 1,
+    z: center.z
   };
-  schedule(delayTicks, () => buildReward(), "create Nether Gauntlet death reward");
+  const chestBlock = attempt(
+    () => dimension.getBlock(chestLocation),
+    "read Nether Gauntlet reward chest location"
+  );
+  if (!chestBlock) {
+    attempt(
+      () => dimension.spawnItem(new ItemStack(BLAZING_EYE_ITEM, 1), deathLocation),
+      "drop Nether Gauntlet reward without chest block"
+    );
+    return;
+  }
+  attempt(
+    () => chestBlock.setType("minecraft:chest"),
+    "place Nether Gauntlet reward chest"
+  );
+  fillRewardChest(dimension, chestLocation);
 }
