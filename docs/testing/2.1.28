@@ -1,0 +1,35 @@
+Bosses of Mass Destruction Bedrock
+Build: 2.1.28
+Status: Development
+Minecraft Bedrock: 1.26.40
+
+Current Focus
+Obsidilith Performance Hotfix
+
+Primary goal
+Fix severe Obsidilith frame drops / crashes reported with Vibrant Visuals without reducing the real combat area or damage coverage.
+
+Obsidilith rift pipeline
+Separated gameplay coverage from visual density.
+Burst, Wave and Spike still use the complete scanned ground-point set for damage.
+Only a bounded representative subset of those points now emits indicator/column particles.
+Replaced per-rift/per-layer player queries with one grouped player query per vertical layer.
+Removed the extra three radial particle emissions that had been added around every rift layer.
+Large attack terrain scanning now probes nearby floor levels first and uses a lower per-tick column budget.
+
+Visual budgets
+Burst: maximum 32 visual rifts (149 gameplay cells remain active on a full radius-7 disc).
+Wave: maximum 18 visual rifts per stage (all gameplay cells remain active).
+Spike: maximum 13 visual rifts, preserving the full radius-2 visual pattern.
+Burst/Wave/Spike/Rift particle emitters now create one particle per scripted emission instead of multiplying each call internally.
+Anvil trail frequency reduced from every 2 ticks to every 3 ticks.
+Anvil impact burst reduced from 70 scripted emissions to 24.
+Spike slowness keeps the effect but disables redundant vanilla potion particles.
+
+Estimated particle reduction for the main rift effects
+Burst: ~8,493 -> ~256 rendered particles (-97.0%).
+Wave: ~2,793 -> ~144 per stage (-94.8%).
+Spike: ~1,469 -> ~104 (-92.9%).
+
+Vibrant Visuals / PBR
+The hotfix attacks excessive particle count and script-query fan-out rather than disabling the visual pipeline.
